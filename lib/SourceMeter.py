@@ -1,7 +1,6 @@
 from keithley2600 import Keithley2600
 import time
 
-
 class SourceMeter:
     def __init__(self, config):
         self.volt = Keithley2600(config["tcp_addr"])
@@ -13,15 +12,19 @@ class SourceMeter:
         # 复位到待接线状态
         self.volt.applyVoltage(self.volt.smua, 0)
 
-    def applyVoltage(self, vol):
+    def applyVoltage(self,vol):
         self.volt.applyVoltage(self.volt.smua, vol)
 
-    def rampvol(self, start, target, step, de):  # supply ramp voltage
+    def applyCurrent(self,amp):
+        self.volt.applyCurrent(self.volt.smua, amp)
+
+
+    def rampvol(self,start,target,step,de):# supply ramp voltage
         self.volt.smua.trigger.source.action = self.volt.smua.ENABLE
         self.volt.smua.trigger.measure.action = self.volt.smua.DISABLE
-        self.volt.rampToVoltage(self.volt.smua, start, target,  de, step)
+        self.volt.rampToVoltage(self.volt.smua, start , target,  de , step)
 
-    def pulseTest(self, start, delay, target):
+    def pulseTest(self,start,delay,target):
         self.volt.applyVoltage(self.volt.smua, 0)
         self.volt.applyVoltage(self.volt.smua, start)
         time.sleep(delay)
@@ -31,14 +34,18 @@ class SourceMeter:
         vol = self.volt.smua.measure.v()
         return vol
 
-    def pulseAmp(self, start, target, targetDelay, digioPin):  # supply one pulse ampere
-        self.volt.smua.source.outputenableaction = 0
-        self.volt.digio.trigger[digioPin].overrun = True
-        self.volt.digio.trigger[digioPin].stimulus = 4
-        self.volt.digio.trigger[digioPin].pulsewidth = 0.0001
-        self.volt.digio.trigger[digioPin].mode = 2
-        # if self.volt.digio.trigger[digio_pin].wait(1) == True:
-        self.volt.smua.trigger.source.listi({start, target})
+    def ampTest(self):
+        amp = self.volt.smua.measure.i()
+        return amp
+
+    def pulseAmp(self, start, target,targetDelay): # supply one pulse ampere
+        #self.volt.smua.source.outputenableaction = 0
+        #self.volt.digio.trigger[digioPin].overrun= True
+        #self.volt.digio.trigger[digioPin].stimulus = 4
+        #self.volt.digio.trigger[digioPin].pulsewidth = 0.0001
+        #self.volt.digio.trigger[digioPin].mode=2
+        #if self.volt.digio.trigger[digio_pin].wait(1) == True:
+        self.volt.smua.trigger.source.listi({start,target})
         self.volt.smua.trigger.source.action = self.volt.smua.ENABLE
         self.volt.smua.trigger.measure.action = self.volt.smua.DISABLE
         self.volt.smua.trigger.source.limiti = 0.1
@@ -58,19 +65,16 @@ class SourceMeter:
         self.volt.waitcomplete()
 
         print("done")
-        # else:
-        #print("there is no pulse")
+        #else:
+            #print("there is no pulse")
 
 
 if __name__ == "__main__":
     # Unit test
-    m = SourceMeter({"tcp_addr": "TCPIP0::172.16.60.100::INSTR"})
-    input("Press ENTER to continue")
-    print("Output 3V")
-    m.applyVoltage(3)
+    m = SourceMeter({"tcp_addr":"TCPIP0::172.16.60.100::INSTR"})
     input("Press ENTER to continue")
     print("Output 1V")
     m.applyVoltage(1)
-    # m.rampvol(0,10,1,1)
-    # m.pulse_amp(0.1,0.5,20,4)
+    #m.rampvol(0,10,1,1)
+    #m.pulse_amp(0.1,0.5,20,4)
     print("PASS")

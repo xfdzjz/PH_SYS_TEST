@@ -13,6 +13,7 @@ class MultiMeter:
         return 0
 
 
+
 if __name__ == "__main__":
     # Unit test
     m = MultiMeter({})

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-import sys
-import os
+import sys, os
 import argparse
 import chardet
-import importlib
-import colorama
+import importlib, colorama
 
 import config
 from lib.SourceMeter import SourceMeter
@@ -12,6 +10,7 @@ from lib.PowerSupply import PowerSupply
 from lib.MultiMeter import MultiMeter
 from lib.Oscilloscope import Oscilloscope
 from lib.Tester import Tester
+from lib.NetMatrix import NetMatrix
 
 
 def initDevices(config):
@@ -27,15 +26,15 @@ def initDevices(config):
     context.multimeter = MultiMeter(config.multimeter)
     context.oscilloscope = Oscilloscope(config.oscilloscope)
     context.tester = Tester(config.tester)
+    context.netmatrix = NetMatrix(config.netmatrix)
     # 停止仪表待重新接线
     context.sourcemeter.stopAll()
     context.powersupply.stopAll()
     context.multimeter.stopAll()
     context.oscilloscope.stopAll()
     context.tester.stopAll()
-
+    context.netmatrix.stopAll()
     return context
-
 
 def execute_case(case, caseDir, context):
     '''
@@ -53,7 +52,7 @@ def execute_case(case, caseDir, context):
     input("Press ENTER to begin")
     result = caseModule.test(context)
     print("TEST CASE %-50s ...... [ %s ]" % (case,
-                                             "\033[1;32mPASS\033[0m" if result else "\033[1;31mFAILED\033[0m"))
+        "\033[1;32mPASS\033[0m" if result else "\033[1;31mFAILED\033[0m"))
 
     # 停止仪表待重新接线
     context.sourcemeter.stopAll()
@@ -61,6 +60,7 @@ def execute_case(case, caseDir, context):
     context.multimeter.stopAll()
     context.oscilloscope.stopAll()
     context.tester.stopAll()
+    context.netmatrix.stopAll()
     print()
 
 
@@ -80,8 +80,7 @@ def main():
 
     # 获得命令行参数
     parser = argparse.ArgumentParser(description='Phoenix CP test tool')
-    parser.add_argument('cases', help="Test cases",
-                        nargs='*', choices=availableCases)
+    parser.add_argument('cases', help="Test cases", nargs='*', choices=availableCases)
     args = parser.parse_args()
     cases = args.cases
 
