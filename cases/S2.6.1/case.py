@@ -19,20 +19,22 @@ def test(ctx):
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("indLedOnVoltDrop")
+    print(resp)
     if resp == 'ready':
         amp = ctx.sourmeter.ampTest()
         print("indled amp is %f when VCC is 3v"%amp)
-        input("press enter to continue")
         ctx.powersupply.voltageOutput(3, 5, 0.1, 3.3, 1)
+        ctx.sourmeter.applyVoltage(5-0.5) # FIXME: check and fix
         amp = ctx.sourmeter.ampTest()
         print("indled amp is %f when VCC is 5v"%amp)
-        input("press enter to continue")
         ctx.powersupply.voltageOutput(3, 2.2, 0.1, 3.3, 1)
+        ctx.sourmeter.applyVoltage(2.2-0.5) # FIXME: check and fix
         amp = ctx.sourmeter.ampTest()
         print("indled amp is %f when VCC is 2.2v"%amp)
 
     resp = ctx.tester.runCommand("next")
     if resp!= 'end':
+        print(resp)
         return False
 
     return True

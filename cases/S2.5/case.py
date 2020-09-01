@@ -15,16 +15,16 @@ def test(ctx):
     '''
 
     # 芯片上电VCC=3V
-    ctx.netmatrix.arrset(['00000000','01100000','00000000','00000000'])#GP05,04->vref
+    ctx.netmatrix.arrset(['00000000','01000000','00000000','00000000'])#GP04->vref
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_lvd_volt")
-    print("resp is %s" %resp)
+    print(resp)
     ctx.powersupply.voltageOutput(3, float(resp[:-2]), 0.1, 5, 1)
     vol = float(resp[:-2])
     while resp!= 'end':
-        print("resp is %s" %resp)
+        print(resp)
         if resp =="10mv+":
             vol = vol +0.01
             print(vol)

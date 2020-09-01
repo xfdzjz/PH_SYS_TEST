@@ -23,15 +23,12 @@ def test(ctx):
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_pd_sensor_out_volt")
-    #resp = ctx.tester.runCommand("next")
-    print(resp)
-
 
     while resp != 'end':
         print(resp)
         if resp == 'ready':
-            ctx.sourcemeter.pulseAmp(0,2e-6,70e-6)
             ctx.oscilloscope.prepareChannel(2, 1000, 300)
+            ctx.sourcemeter.pulseAmp(0,2e-6,70e-6)
             wave = ctx.oscilloscope.getWave(2, 1000, 300)
             wave_max = max(wave)
             counter = counter + 1
@@ -40,7 +37,6 @@ def test(ctx):
             waveMax.append(wave_max)
             count.append(counter)
             ctx.tester.runCommand("next")
-            input("press Enter to continue")
         else:
             return False
 

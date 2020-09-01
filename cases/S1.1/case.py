@@ -19,12 +19,6 @@ def test(ctx):
     resp = ctx.tester.runCommand("TestCmpTrim")
     print(resp)
 
-    if resp != 'fail':
-        print(resp)
-    else:
-        with open("nvrdata.txt","a") as f:
-            f.write("case 1.1 fail ")
+    if resp == 'fail':
         return False
-    with open("nvrdata.txt","a") as f:
-        f.write(resp[7:]+'\n')
     return True

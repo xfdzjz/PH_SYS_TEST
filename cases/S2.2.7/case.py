@@ -25,15 +25,12 @@ def test(ctx):
         if resp == 'ready' and counter <4:
             vol = ctx.sourcemeter.volTest()
             print("VCC is 3.3v vol is %f" %vol)
-            input("press enter to continue case")
             ctx.powersupply.voltageOutput(3, 5, 0.1, 6, 1)
             vol = ctx.sourcemeter.volTest()
             print("VCC is 5v vol is %f" %vol)
-            input("press enter to continue case")
             ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)
             vol = ctx.sourcemeter.volTest()
             print("VCC is 2.2v vol is %f" %vol)
-            input("press enter to continue case")
             ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)
             resp = ctx.tester.runCommand("next")
             counter = counter +1

@@ -13,21 +13,12 @@ def test(ctx):
     ctx.multimeter 未使用
     '''
     # 芯片上电VCC=3V, Channel=1
-    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
     ctx.netmatrix.relayset(['00000000','00000000','00000000','00000000'])
+    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
 
-    ctx.tester.runCommand("test_mode_sel")
-    ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("TestMRCTrim")
-    if resp != 'fail':
-        print(resp)
-    else:
-        with open("nvrdata.txt","ab") as f:
-            f.write("case 1.6 fail ")
+    print(resp)
+    if resp == 'fail':
         return False
-
-
-    with open("nvrdata.txt","ab") as f:
-        f.write(resp[7:]+'\n')
     return True
 

@@ -24,9 +24,10 @@ def test(ctx):
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_adc_freq")
-    resp = ctx.tester.runCommand("next")
+    resp = ctx.tester.runCommand("next") # FIXME: check
 
     while resp !="end":
+        print(resp)
         if resp[-2:] == 'mv':
             vol = float(resp[:-2])
             step = vol / 4096
@@ -45,7 +46,5 @@ def test(ctx):
             counter.append(count)
         resp = ctx.tester.runCommand("n")
 
-
-
-
+    # FIXME: no case to return False?
     return True

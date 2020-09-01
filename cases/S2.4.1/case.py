@@ -23,7 +23,6 @@ def test(ctx):
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_cmp_hys")
-    print(resp)
 
     while resp != 'end':#check voltage of souremeter
         print("GP00=%f resp: %s" % (gp00vol, resp))

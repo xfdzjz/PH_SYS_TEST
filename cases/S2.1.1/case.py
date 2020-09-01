@@ -17,22 +17,18 @@ def test(ctx):
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("VBGSTestOnVCCVerify")
-    print(resp)
 
     while resp !='end':
         print(resp)
         if resp == 'ready':
             vol = ctx.sourcemeter.volTest()
             print("VCC is 3.3v vol is %f" %vol)
-            input("press enter to continue case")
             ctx.powersupply.voltageOutput(3, 5, 0.1, 6, 1)
             vol = ctx.sourcemeter.volTest()
             print("VCC is 5v vol is %f" %vol)
-            input("press enter to continue case")
             ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)
             vol = ctx.sourcemeter.volTest()
             print("VCC is 2.2v vol is %f" %vol)
-            input("press enter to continue case")
         else:
             return False
         resp = ctx.tester.runCommand("next")

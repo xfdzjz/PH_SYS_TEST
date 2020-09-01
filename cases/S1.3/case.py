@@ -19,14 +19,8 @@ def test(ctx):
     resp = ctx.tester.runCommand("TestBGATrim")
     print(resp)
 
-    if resp != 'fail':
-        print(resp)
-    else:
-        with open("nvrdata.txt","a") as f:
-            f.write("case 1.5 fail ")
+    if resp == 'fail':
         return False
-    with open("nvrdata.txt","a") as f:
-        f.write(resp[7:]+'\n')
 
     ctx.powersupply.voltageOutput(4, 0, 0.1, 3.3, 1)
     return True
