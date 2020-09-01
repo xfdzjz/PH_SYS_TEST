@@ -2,9 +2,7 @@
 title = "cmp反向功能"
 
 desc = '''
-    稳压源 Channel1 <=> VCC
-    稳压源 Channel2 <=> GP00
-    稳压源 Channel3 <=> GP18
+    relay k1 and k22 connect
 '''
 
 
@@ -22,13 +20,13 @@ def test(ctx):
 
 
     # 芯片上电VCC=3V
+    ctx.netmatrix.arrset(['10000000','00000100','00000000','00000000'])#GP00->src GP18->vref
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
     ctx.powersupply.voltageOutput(4, 1.5, 0.1, 3.3, 1)# dc ps channel4 apply 1.5v to GP00
     ctx.powersupply.voltageOutput(2, 1.0, 0.1, 3.3, 1)# dc ps channel2 apply 1.0v to GP18
-    ctx.netmatrix.arrset(['00000000','00000100','00001000','10000000'])#GP00->src GP18->vref
 
     ctx.tester.runCommand("open_power_en")
-    ctx.tester.runCommand("test_model_sel")
+    ctx.tester.runCommand("test_mode_sel")
     resp = ctx.tester.runCommand("test_cmp_inv")
 
     while resp  != 'end':#check voltage of souremeter

@@ -14,7 +14,6 @@ class Tester:
         pass
 
     def runCommand(self, cmd):# communication using serial port and how much string number will be read
-        print((cmd + " ").encode('ascii'))
         self.port.write((cmd + " ").encode('ascii')) # command ending char " "
         sleep(0.2)
         readVal = self.port.read_all()

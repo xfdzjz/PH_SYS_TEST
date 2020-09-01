@@ -1,11 +1,9 @@
 
 import time
-title = "VDD稳定性测试"
+title = "BVS电流"
 
 desc = '''
-    在时钟trim后做此项测试
-    稳压源 Channel3 <=> VCC
-    源表  <=> VBGS
+    relay k25 connect
 '''
 
 def test(ctx):
@@ -15,9 +13,10 @@ def test(ctx):
     ctx.multimeter 未使用
     '''
     # 芯片上电VCC=3V, Channel=1
-    ctx.sourmeter.applyVoltage(3.3)
+
     ctx.netmatrix.arrset(['00000010','00000000','00000000','00000000'])#VCC->SRC
-    ctx.tester.runCommand("test_model_sel")
+    ctx.sourmeter.applyVoltage(3.3)
+    ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("PowerDown")
     if resp == 'ready':

@@ -1,11 +1,9 @@
 
 import time
-title = "VDD稳定性测试"
+title = "V1P5D线性调整"
 
 desc = '''
-    在时钟trim后做此项测试
-    稳压源 Channel3 <=> VCC
-    源表  <=> VBGS
+relay k17 connect
 '''
 
 def test(ctx):
@@ -15,9 +13,9 @@ def test(ctx):
     ctx.multimeter 未使用
     '''
     # 芯片上电VCC=3V, Channel=1
+    ctx.netmatrix.arrset(['00001000','00000000','00000000','00000000'])#GP15->src
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    ctx.netmatrix.arrset(['00000000','00000000','00100000','00000000'])#GP15->OSC
-    ctx.tester.runCommand("test_model_sel")
+    ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("V1P5DTest")
     counter = 0

@@ -2,9 +2,7 @@ import time
 title = "DCDC 限流功能"
 
 desc = '''
-    源表 <=> LX
-    稳压源channel1 <=> VH
-    示波器 <=> LX及GP14
+    relay k11 connect
 '''
 
 
@@ -21,8 +19,8 @@ def test(ctx):
     # 芯片上电VH=2.5V
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 4, 1)
     ctx.powersupply.voltageOutput(4, vol, 0.1, 3, 1)
-    ctx.netmatrix.arrset(['00000000','00000000','00100000','00010000'])
-    ctx.tester.runCommand("test_model_sel")
+    ctx.netmatrix.arrset(['00000000','00000000','00100000','00000000'])
+    ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_dcdc_ipk")
 

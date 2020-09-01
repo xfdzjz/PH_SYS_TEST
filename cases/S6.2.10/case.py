@@ -2,9 +2,7 @@ import time
 title = "DCDC VOOK功能"
 
 desc = '''
-    源表 <=> PDAS
-    稳压源channel2 <=> VCC
-    示波器 <=> GP15(VO1)
+    relay k11 connect
 '''
 
 
@@ -20,8 +18,8 @@ def test(ctx):
 
     # 芯片上电VCC=3V
     ctx.sourcemeter.applyVoltage(3)
-    ctx.netmatrix.arrset(['00000000','01000000','00000000','00000000'])
-    ctx.tester.runCommand("test_model_sel")
+    ctx.netmatrix.arrset(['00000000','00000000','00100000','00000000'])
+    ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_dcdc_vok")
 

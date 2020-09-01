@@ -1,11 +1,9 @@
 
 import time
-title = "VDD稳定性测试"
+title = "BZ导通压降"
 
 desc = '''
-    在时钟trim后做此项测试
-    稳压源 Channel3 <=> VCC
-    源表  <=> VBGS
+relay k5, k9 connect
 '''
 
 def test(ctx):
@@ -19,7 +17,7 @@ def test(ctx):
     ctx.powersupply.voltageOutput(4, 5.5, 0.1, 3.3, 1)#vh
     ctx.powersupply.voltageOutput(2, 0, 0.1, 3.3, 1)#FI
     ctx.netmatrix.arrset(['01000000','00000000','00000000','00000000'])#HORNS->SRC
-    ctx.tester.runCommand("test_model_sel")
+    ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("bzOnVoltDrop")
     counter = 0

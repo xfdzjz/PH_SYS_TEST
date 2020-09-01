@@ -1,10 +1,8 @@
 import time
-title = "DCDC VOOK功能"
+title = "10V纹波、带载"
 
 desc = '''
-    源表 <=> PDAS
-    稳压源channel2 <=> VCC
-    示波器 <=> GP15(VO1)
+    relay k4,k15 connect
 '''
 
 
@@ -19,25 +17,25 @@ def test(ctx):
     vol = 3
 
     # 芯片上电VCC=3V
+    ctx.netmatrix.arrset(['00000000','00000000','00010000','10000000'])#GP00 ->osc1 gp14->osc2
     ctx.powersupply.voltageOutput(1, 3.3, 0.1, 4, 1)
-    ctx.netmatrix.arrset(['10000000','01000000','00100000','00010000'])
-    ctx.tester.runCommand("test_model_sel")
+    ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
-    ctx.oscilloscope.trig(1,POS,0.4)
+    ctx.oscilloscope.trig(1,'POS',0.4)
     resp = ctx.tester.runCommand("test_dcdc_volt_10p0wave")
     while resp !='end':
         if resp == "ready":
-            while statusCheck() != True:
+            while ctx.oscilloscope.statusCheck() != True:
                 start = time.time()
             ctx.oscilloscope.prepareChannel(1, 1000, 5000)
             GP00 = ctx.oscilloscope.getWave(1, 1000, 5000)
-            ctx.oscilloscope.trig(2,POS,0.4)
-            while statusCheck() != True:
+            ctx.oscilloscope.trig(2,'POS',0.4)
+            while ctx.oscilloscope.statusCheck() != True:
                 end = time.time()
             ctx.oscilloscope.prepareChannel(2, 1000, 5000)
             GPI4 = ctx.oscilloscope.getWave(2, 1000, 5000)
             ctx.oscilloscope.trigSlope(3,"PGReater",0.4,8)
-            while statusCheck() != True:
+            while ctx.oscilloscope.statusCheck() != True:
                 final = time.time()
             ctx.oscilloscope.prepareChannel(3, 1000, 10000)
             VH = ctx.oscilloscope.getWave(3, 1000, 10000)

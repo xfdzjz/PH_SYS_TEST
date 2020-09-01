@@ -1,10 +1,9 @@
 
 import time
-title = "VDD稳定性测试"
+title = "HRC自动trim流程"
 
 desc = '''
-    在时钟trim后做此项测试
-    稳压源 Channel3 <=> VCC
+relay has no connection
 '''
 
 def test(ctx):
@@ -16,8 +15,9 @@ def test(ctx):
     # 芯片上电VCC=3V, Channel=3
     fre = 1
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    ctx.tester.runCommand("test_model_sel")
-    ctx.tester.runCommand("open_power_en")
+    ctx.netmatrix.relayset(['00000000','00000000','00000000','00000000'])
+
+
     resp = ctx.tester.runCommand("TestHrcTrim")
     while resp != 'end':
         if resp != 'fail':

@@ -22,7 +22,7 @@ def test(ctx):
     # 芯片上电VCC=3V
     ctx.powersupply.voltageOutput(2, 3, 0.1, 3.3, 1)
     ctx.tester.runCommand("open_power_en")
-    ctx.tester.runCommand("test_model_sel")
+    ctx.tester.runCommand("test_mode_sel")
 
     #case 3.4.1
     resp = ctx.tester.runCommand("test_pwrMgr")

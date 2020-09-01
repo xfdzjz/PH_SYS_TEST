@@ -1,10 +1,8 @@
 import time
-title = "DCDC VOOK功能"
+title = "5.5V纹波、带载"
 
 desc = '''
-    源表 <=> PDAS
-    稳压源channel2 <=> VCC
-    示波器 <=> GP15(VO1)
+    relay k4,k15 connect
 '''
 
 
@@ -19,9 +17,10 @@ def test(ctx):
     vol = 3
 
     # 芯片上电VCC=3V
+
+    ctx.netmatrix.arrset(['00000000','00000000','00010000','10000000'])#GP00 ->osc1 gp14->osc2
     ctx.powersupply.voltageOutput(1, 3.3, 0.1, 4, 1)
-    ctx.netmatrix.arrset(['10000000','01000000','00100000','00010000'])
-    ctx.tester.runCommand("test_model_sel")
+    ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     ctx.oscilloscope.trig(1,"POS",0.4)
     resp = ctx.tester.runCommand("test_dcdc_volt_5p5_volt_trim")

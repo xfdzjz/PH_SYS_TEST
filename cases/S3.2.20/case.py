@@ -1,11 +1,9 @@
 
 import time
-title = "VDD稳定性测试"
+title = "POR延时"
 
 desc = '''
-    在时钟trim后做此项测试
-    稳压源 Channel3 <=> VCC
-    源表  <=> VBGS
+relay k25,k26,k23 connect
 '''
 
 def test(ctx):
@@ -16,15 +14,13 @@ def test(ctx):
     '''
     # 芯片上电VCC=3V, Channel=1
     ctx.oscilloscope.trig(2,'POS',2.5)
-    ctx.netmatrix.arrset(['00000010','00000000','00000000','00000100'])#VCC->SRC
-    ctx.tester.runCommand("test_model_sel")
-    ctx.tester.runCommand("open_power_en")
-
-
-    ctx.sourcemeter.applyVoltage(3.3)
-
-    ctx.oscilloscope.trig(2,'NEG',0.1)
     ctx.sourcemeter.applyVoltage(0)
+    ctx.netmatrix.arrset(['00000010','00000010','00000100','00000000'])#VCC->src,osc1 POR->osc2
+    ctx.tester.runCommand("test_mode_sel")
+    ctx.tester.runCommand("open_power_en")
+    ctx.sourcemeter.applyVoltage(3.3)
+    ctx.oscilloscope.trig(2,'POS',2.5)
+    ctx.sourcemeter.rampvol(0,3.3,1,1)
     vol = ctx.oscilloscope.readRamData(2,2,1,15625)
 
     print(vol)

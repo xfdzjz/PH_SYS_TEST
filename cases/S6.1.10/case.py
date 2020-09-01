@@ -2,9 +2,7 @@ import time
 title = "DCDC占空比"
 
 desc = '''
-    源表 <=> PDAS
-    稳压源channel2 <=> VCC
-    示波器 <=> GP15(VO1)
+    relay k11 connect
 '''
 
 
@@ -17,9 +15,10 @@ def test(ctx):
     '''
 
     # 芯片上电VCC=3V
+
+    ctx.netmatrix.arrset(['00000000','00000000','00100000','00000000'])
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
-    ctx.netmatrix.arrset(['00000000','00000000','00100000','01000000'])
-    ctx.tester.runCommand("test_model_sel")
+    ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_dcdc_duty")
 
@@ -27,9 +26,9 @@ def test(ctx):
     while resp != 'end':
         if resp == 'ready':
             ctx.sourcemeter.applyCurrent(2e-6)
-            ctx.oscilloscope.prepareChannel(3, 1000, 300)
-            wave = ctx.oscilloscope.getWave(3, 1000, 300)
-            para = ctx.oscilloscope.paraTest(3)
+            ctx.oscilloscope.prepareChannel(2, 1000, 300)
+            wave = ctx.oscilloscope.getWave(2, 1000, 300)
+            para = ctx.oscilloscope.paraTest(2)
             duty = 100*float(para[0])
             freq = float(para[1])
 

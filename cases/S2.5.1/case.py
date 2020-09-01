@@ -2,10 +2,7 @@ import time
 title = "LVD检测"
 
 desc = '''
-    在时钟trim后做此项测试
-    稳压源 Channel1 <=> VCC
-    稳压源 Channel2 <=> GP18
-    源表 <=> GP00
+relay k6,k10 connect
 '''
 
 
@@ -18,9 +15,9 @@ def test(ctx):
     '''
 
     # 芯片上电VCC=3V
-    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
     ctx.netmatrix.arrset(['00000000','01100000','00000000','00000000'])#GP05,04->vref
-    ctx.tester.runCommand("test_model_sel")
+    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
+    ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_lvd_volt")
     print("resp is %s" %resp)

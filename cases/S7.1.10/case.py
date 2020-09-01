@@ -1,11 +1,9 @@
 import time
 import numpy as np
-title = "DCDC VOOK功能"
+title = "4.5V纹波"
 
 desc = '''
-    源表 <=> PDAS
-    稳压源channel2 <=> VCC
-    示波器 <=> GP15(VO1)
+    relay k4,k15 connect
 '''
 
 
@@ -19,10 +17,9 @@ def test(ctx):
 
     # 芯片上电VCC=3.3V
     #ctx.sourcemeter.applyVoltage(0)
+    ctx.netmatrix.arrset(['00000000','00000000','00010000','10000000'])#GP00 ->osc1 gp14->osc2
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 2, 1)
-    #time.sleep(3)
-    ctx.netmatrix.arrset(['10000000','01000000','00100000','00010000'])
-    ctx.tester.runCommand("test_model_sel")
+    ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_dcdc_volt_4p5wave")
 
