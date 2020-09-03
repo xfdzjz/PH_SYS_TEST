@@ -31,10 +31,12 @@ def test(ctx):
     while resp != 'end':
         print(resp)
         if resp == '100mv+':
-            ctx.powersupply.voltageOutput(2, vol + 0.1, 0.1, 7, 1)
+            vol = vol + 0.1
+            ctx.powersupply.voltageOutput(2, vol , 0.1, 7, 1)
             resp = ctx.tester.runCommand("next")
         elif resp == '100mv-':
-            ctx.powersupply.voltageOutput(2, vol - 0.1, 0.1, 7, 1)
+            vol = vol - 0.1
+            ctx.powersupply.voltageOutput(2, vol , 0.1, 7, 1)
             resp = ctx.tester.runCommand("next")
         elif resp[:3] == "vok":
             print(resp[:4] + "voltage is %sv" %resp[-5:-2])

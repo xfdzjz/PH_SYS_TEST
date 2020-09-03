@@ -1,6 +1,6 @@
 
 import time
-title = "BVS电流"
+title = "bvsMaxCur"
 
 desc = '''
     relay k25 connect
@@ -19,17 +19,10 @@ def test(ctx):
     time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("PowerDown")
+    resp = ctx.tester.runCommand("bvsMaxCur")
+    if resp == 'ready':
+        amp = ctx.sourmeter.ampTest()
+        print("I_BVS amp is %f when VCC is 3.3v"%amp)
 
-    amp = ctx.sourmeter.ampTest()
-    print("I_pwrdown amp is %f when VCC is 3v"%amp)
-    ctx.sourmeter.applyVoltage(5)
-    amp = ctx.sourmeter.ampTest()
-    print("I_pwrdown amp is %f when VCC is 5v"%amp)
-    ctx.sourmeter.applyVoltage(2.2)
-    amp = ctx.sourmeter.ampTest()
-    print("I_pwrdown amp is %f when VCC is 2.2v"%amp)
-
-    ctx.sourmeter.applyVoltage(3.3)
 
     return True

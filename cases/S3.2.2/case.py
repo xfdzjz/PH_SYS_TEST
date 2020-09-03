@@ -20,23 +20,26 @@ def test(ctx):
     ctx.sourcemeter.applyVoltage(0)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
-    ctx.sourcemeter.applyVoltage(3.3)
+    ctx.sourcemeter.applyVoltage(3.0)
     ctx.oscilloscope.trig(2,'POS',2.5)
-    ctx.sourcemeter.rampvol(0,3.3,1,1)
+    ctx.sourcemeter.rampvol(0,3.0, 0.1/3, 1)
     vol = ctx.oscilloscope.readRamData(2,2,1,15625)
     tIncre = ctx.oscilloscope.xincre()
     print(vol)
     for i in range(0,len(vol)):
         if float(vol[i]) - float(vol[0])>= 2.8:
+            found = False
             for j in range(0,i):
                 if vol[j] >=0.1:
                     print("tfpor is %f" %(i-j)*tIncre)
-                else:
-                    return False
+                    found = True
+                    break
+            if not found:
+                return False
             count = i
-        if float(vol[count])- float(vol[i]) >=-2.8:
+        if float(vol[count])- float(vol[i-count]) >=-2.8:
             for j in range(count,i):
-                if vol[j] >=2.8
+                if vol[j] >=2.8 :
                     print("tfpor is %f" %(i-j)*tIncre)
                 else:
                     return False

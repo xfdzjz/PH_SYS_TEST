@@ -18,6 +18,7 @@ def test(ctx):
 
     ctx.netmatrix.arrset(['00000000','00000000','00100000','00000000'])
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
+    ctx.powersupply.voltageOutput(2, 3.0, 0.1, 5, 1)
     time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
@@ -27,7 +28,6 @@ def test(ctx):
     while resp != 'end':
         if resp == 'ready':
             ctx.oscilloscope.prepareChannel(2, 1000, 300)
-            ctx.sourcemeter.applyCurrent(2e-6)
             wave = ctx.oscilloscope.getWave(2, 1000, 300)
             para = ctx.oscilloscope.paraTest(2)
             duty = 100*float(para[0])
