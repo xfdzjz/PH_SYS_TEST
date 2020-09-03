@@ -16,7 +16,7 @@ def test(ctx):
 
     ctx.netmatrix.arrset(['00000000','00000000','00000000','00000000'])
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    time.sleep(250)
+    time.sleep(0.250)
     resp = ctx.tester.runCommand("EnterEstMode")
     if resp != 'pass':
         return False

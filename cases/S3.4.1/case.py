@@ -16,7 +16,7 @@ def test(ctx):
 
     ctx.netmatrix.arrset(['00000000','01100000','00000000','00000000'])#Horns,b->osc1,2
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.powersupply.voltageOutput(4, 10.5, 0.1, 7, 1)#vh
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")

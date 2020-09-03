@@ -20,6 +20,7 @@ def test(ctx):
     resp = ctx.tester.runCommand("TestBGATrim")
     print(resp)
 
+<<<<<<< HEAD
     counter = 1
     target = 3
     if resp != 'fail':
@@ -36,6 +37,10 @@ def test(ctx):
                 counter = counter +1
         f.write(data)
         f.close()
+=======
+    if resp == 'fail':
+        return False
+>>>>>>> 3726e50be1b4c95cf2cd829665a94fe7071e50f6
 
     ctx.powersupply.voltageOutput(4, 0, 0.1, 3.3, 1)
     return True

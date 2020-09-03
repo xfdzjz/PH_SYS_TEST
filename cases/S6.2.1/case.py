@@ -20,7 +20,7 @@ def test(ctx):
 
     ctx.netmatrix.arrset(['00000000','00000000','00100000','00000000'])
     ctx.sourcemeter.applyVoltage(3.3)
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_dcdc_vok")

@@ -16,7 +16,7 @@ def test(ctx):
 
     ctx.netmatrix.arrset(['10000000','00000000','00000000','00000000'])#GP12->SRC
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.sourmeter.applyVoltage(0.2)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")

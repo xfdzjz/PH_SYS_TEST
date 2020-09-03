@@ -17,7 +17,7 @@ def test(ctx):
     # 芯片上电VCC=3V
     ctx.netmatrix.arrset(['01000000','00010000','00000000','00000000'])#GP04->src GP14->vref
     ctx.sourcemeter.applyVoltage(3.3)
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_adc_mult_samp")

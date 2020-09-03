@@ -15,7 +15,7 @@ def test(ctx):
     # 芯片上电VCC=3V, Channel=1
     ctx.netmatrix.arrset(['00000010','00000010','00000100','00000000'])#VCC->src,osc1 POR->osc2
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.oscilloscope.trig(2,'POS',2.5)
     ctx.sourcemeter.applyVoltage(0)
     ctx.tester.runCommand("test_mode_sel")

@@ -14,7 +14,7 @@ def test(ctx):
     '''
     # 芯片上电VCC=3V, Channel=1
     ctx.netmatrix.arrset(['00010000','00000000','00000000','00000000'])#BLED->SRC
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
     ctx.powersupply.voltageOutput(4, 5.7, 0.1, 7, 1)#vh
     ctx.tester.runCommand("test_mode_sel")

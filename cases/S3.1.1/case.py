@@ -15,7 +15,7 @@ def test(ctx):
     # 芯片上电VCC=3V, Channel=1
     ctx.netmatrix.arrset(['00000010','00000000','00000000','00000000'])#VCC->SRC
     ctx.sourmeter.applyVoltage(3.3)
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("TestRunPower")

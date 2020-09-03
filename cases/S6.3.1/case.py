@@ -19,8 +19,9 @@ def test(ctx):
     # 芯片上电VH=2.5V
     ctx.netmatrix.arrset(['00000000','00000000','00100000','00000000'])
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 4, 1)
+    time.sleep(0.250)
     ctx.powersupply.voltageOutput(4, vol, 0.1, 3, 1)
-    time.sleep(250)
+
 
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")

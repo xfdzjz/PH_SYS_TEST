@@ -21,7 +21,7 @@ def test(ctx):
 
     ctx.netmatrix.arrset(['00000000','00000000','00010000','10000000'])#GP00 ->osc1 gp14->osc2
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 4, 1)
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_dcdc_volt_8p0wave")

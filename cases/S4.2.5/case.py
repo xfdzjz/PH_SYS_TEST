@@ -16,7 +16,7 @@ def test(ctx):
 
     ctx.netmatrix.arrset(['00000000','00000000','00001000','00000000'])#GP11->SRC case4
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_adc_chn4_samp")

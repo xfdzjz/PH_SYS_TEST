@@ -19,7 +19,7 @@ def test(ctx):
 
     ctx.netmatrix.arrset(['00000000','00000000','00010000','10000000'])#GP00 ->osc1 gp14->osc2
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 4, 1)
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.powersupply.channelOn(1)
     ctx.powersupply.channelOn(2)
     ctx.powersupply.voltageOutput(1, 4.5, 0.1, 4, 1)

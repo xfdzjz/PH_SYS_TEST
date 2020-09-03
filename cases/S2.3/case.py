@@ -15,8 +15,9 @@ def test(ctx):
     # 芯片上电VCC=3V, Channel=1
     ctx.netmatrix.arrset(['00001000','00000000','00000000','00000000'])#GP15->src
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    time.sleep(250)
-    ctx.powersupply.voltageOutput(4, 1.2, 0.1, 3.3, 1)
+    time.sleep(0.250)
+    ctx.sourcemeter.applyVoltage(1.2)
+
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("ISRCS60nA")
@@ -24,17 +25,16 @@ def test(ctx):
     if resp == 'ready':
         amp = ctx.sourcemeter.ampTest()
         print("ISRCS amp is %f when VCC is 3v"%amp)
-        input("press enter to continue")
         ctx.powersupply.voltageOutput(3, 5, 0.1, 3.3, 1)
         amp = ctx.sourcemeter.ampTest()
         print("ISRCS amp is %f when VCC is 5v"%amp)
-        input("press enter to continue")
         ctx.powersupply.voltageOutput(3, 2.2, 0.1, 3.3, 1)
         amp = ctx.sourcemeter.ampTest()
         print("ISRCS amp is %f when VCC is 2.2v"%amp)
+        resp = ctx.tester.runCommand("next")
 
-    resp = ctx.tester.runCommand("next")
     if resp!= 'end':
+        print(resp)
         return False
 
     return True

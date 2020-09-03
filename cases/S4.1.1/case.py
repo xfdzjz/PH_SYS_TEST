@@ -22,14 +22,15 @@ def test(ctx):
     # 芯片上电VCC=3V
     ctx.netmatrix.arrset(['10000000','00000001','00000000','00000000'])#GP00,18->vref1,2 case4
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.powersupply.voltageOutput(1, 2.5, 0.1, 3.3, 1)
     ctx.powersupply.voltageOutput(2, 1.5, 0.1, 3.3, 1)# dc ps channel2 apply 1.5v to VC1N0/VC1N1/VC1P0-VC1P5
 
 
     ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("test_cmp_chn")
     ctx.tester.runCommand("test_mode_sel")
+    resp = ctx.tester.runCommand("test_cmp_chn")
+
 
     while resp != 'end':#check voltage of souremeter
         print("fail or pass:%s" % (resp))

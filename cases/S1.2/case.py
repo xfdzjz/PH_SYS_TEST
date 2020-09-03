@@ -18,10 +18,15 @@ def test(ctx):
     time.sleep(250)
     ctx.powersupply.voltageOutput(4, 1.21, 0.1, 3.3, 1)
     resp = ctx.tester.runCommand("TestBGSTrim")
+<<<<<<< HEAD
 
     if resp != 'fail':
         print(resp)
     else:
+=======
+    print(resp)
+    if resp == 'fail':
+>>>>>>> 3726e50be1b4c95cf2cd829665a94fe7071e50f6
         return False
 
     counter = 1
