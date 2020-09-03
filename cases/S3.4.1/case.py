@@ -14,10 +14,10 @@ def test(ctx):
     '''
     # 芯片上电VCC=3V, Channel=1
 
-    ctx.netmatrix.arrset(['00000000','01100000','00000000','00000000'])#Horns,b->osc1,2
+    ctx.netmatrix.arrset(['00000000','00000010','01000000','00100000'])#Horns,b->osc1,2
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
     time.sleep(0.250)
-    ctx.powersupply.voltageOutput(4, 10.5, 0.1, 7, 1)#vh
+    ctx.powersupply.voltageOutput(2, 10.5, 0.1, 7, 1)#vh
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("bzPwmMode")

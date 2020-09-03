@@ -31,16 +31,16 @@ def test(ctx):
         if resp[-2:] == 'mv':
             vol = float(resp[:-2])
             step = vol / 4096
-        for count in (0,4095):
+        for count in (0,4096):
             ctx.sourcemeter.applyVoltage(count*step)
-            resp = ctx.tester.runCommand("")
+            resp = ctx.tester.runCommand("n")
             print(resp)
             ad_vol.append(resp)
             counter.append(count)
-        for count in (4095,0):
+        for count in (4096,0):
             ctx.sourcemeter.applyVoltage(count*step)
             count = count -1
-            resp = ctx.tester.runCommand("")
+            resp = ctx.tester.runCommand("n")
             print(resp)
             ad_vol.append(resp)
             counter.append(count)

@@ -20,10 +20,10 @@ def test(ctx):
     PassOrFail = []
 
     # 芯片上电VCC=3V
-    ctx.netmatrix.arrset(['10000000','00000001','00000000','00000000'])#GP00,18->vref1,2 case4
+    ctx.netmatrix.arrset(['00000000','10000000','00000001','00000000'])#GP00,18->vref1,2 case4
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
     time.sleep(0.250)
-    ctx.powersupply.voltageOutput(1, 2.5, 0.1, 3.3, 1)
+    ctx.powersupply.voltageOutput(4, 2.5, 0.1, 3.3, 1)
     ctx.powersupply.voltageOutput(2, 1.5, 0.1, 3.3, 1)# dc ps channel2 apply 1.5v to VC1N0/VC1N1/VC1P0-VC1P5
 
 
@@ -36,22 +36,22 @@ def test(ctx):
         print("fail or pass:%s" % (resp))
 
         if resp == 'pass' and  counter ==0 :
-            ctx.powersupply.voltageOutput(1, 1, 0.1, 3.3, 1)
+            ctx.powersupply.voltageOutput(4, 1, 0.1, 3.3, 1)
             count.append(counter)
             PassOrFail.append(resp)
             counter = counter + 1
         elif resp == 'pass' and  counter ==1 :
-            ctx.netmatrix.arrset(['10000000','00001000','00000000','00000000'])#GP00,11->vref1,2 case4
-            ctx.powersupply.voltageOutput(1, 2.5, 0.1, 3.3, 1)
+            ctx.netmatrix.arrset(['00000000','10000000','00001000','00000000'])#GP00,11->vref1,2 case4
+            ctx.powersupply.voltageOutput(4, 2.5, 0.1, 3.3, 1)
             count.append(counter)
             PassOrFail.append(resp)
             counter = counter + 1
         elif resp == 'pass' and  counter ==2 :
-            ctx.powersupply.voltageOutput(1, 1, 0.1, 3.3, 1)
+            ctx.powersupply.voltageOutput(4, 1, 0.1, 3.3, 1)
             count.append(counter)
             PassOrFail.append(resp)
             counter = counter + 1
-            ctx.netmatrix.arrset(['10000000','00000000','00000000','00000000'])#GP00,11->vref1,2 case4
+            ctx.netmatrix.arrset(['00000000','10000000','00001000','00000000'])#GP00,11->vref1,2 case4
         elif  resp == 'pass' and counter ==3 :
             ctx.netmatrix.arrset(['00000010','00000000','00000000','00000000'])
             counter = counter + 1

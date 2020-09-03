@@ -24,7 +24,7 @@ def test(ctx):
     time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("test_adc_ext_vCC")
+    resp = ctx.tester.runCommand("test_adc_ext_vcc")
     resp = ctx.tester.runCommand("next")
 
     while resp !="end":
