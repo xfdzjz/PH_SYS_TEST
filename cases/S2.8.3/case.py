@@ -1,5 +1,5 @@
 import time
-title = "ADC参考电压遍历"
+title = "ADC采样输入通道遍历"
 
 desc = '''
     relay k5,k14 connect
@@ -24,20 +24,20 @@ def test(ctx):
     time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("test_adc_int_vref")
-    count = 0
+    resp = ctx.tester.runCommand("test_adc_ext_vcc")
+    resp = ctx.tester.runCommand("next")
 
     while resp !="end":
         if resp[-2:] == 'mv':
             vol = float(resp[:-2])
             step = vol / 4096
-        for count in (0,4096):
+        for count in (0,4095):
             ctx.sourcemeter.applyVoltage(count*step)
             resp = ctx.tester.runCommand("n")
             print(resp)
             ad_vol.append(resp)
             counter.append(count)
-        for count in (4096,0):
+        for count in (4095,0):
             ctx.sourcemeter.applyVoltage(count*step)
             count = count -1
             resp = ctx.tester.runCommand("n")
@@ -47,9 +47,6 @@ def test(ctx):
         resp = ctx.tester.runCommand("n")
 
 
-
-    for (x,y) in (ad_vol,counter):
-        print("case %d voltage is %f"%(y,x))
 
 
     return True

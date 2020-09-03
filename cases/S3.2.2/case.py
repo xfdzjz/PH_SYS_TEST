@@ -24,8 +24,21 @@ def test(ctx):
     ctx.oscilloscope.trig(2,'POS',2.5)
     ctx.sourcemeter.rampvol(0,3.3,1,1)
     vol = ctx.oscilloscope.readRamData(2,2,1,15625)
-
+    tIncre = ctx.oscilloscope.xincre()
     print(vol)
-
+    for i in range(0,len(vol)):
+        if float(vol[i]) - float(vol[0])>= 2.8:
+            for j in range(0,i):
+                if vol[j] >=0.1:
+                    print("tfpor is %f" %(i-j)*tIncre)
+                else:
+                    return False
+            count = i
+        if float(vol[count])- float(vol[i]) >=-2.8:
+            for j in range(count,i):
+                if vol[j] >=2.8
+                    print("tfpor is %f" %(i-j)*tIncre)
+                else:
+                    return False
 
     return True

@@ -18,9 +18,10 @@ def test(ctx):
 
     # 芯片上电VCC=3V
 
-    ctx.netmatrix.arrset(['00000000','00000000','00100000','00000000'])
-    ctx.sourcemeter.applyVoltage(3.3)
+    ctx.netmatrix.arrset(['00000000','00000000','00010000','00000000'])
+    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 7, 1)#vCC
     time.sleep(0.250)
+    ctx.powersupply.voltageOutput(2, 3, 0.1, 7, 1)#vh
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_dcdc_vok")
@@ -30,10 +31,10 @@ def test(ctx):
     while resp != 'end':
         print(resp)
         if resp == '100mv+':
-            ctx.sourcemeter.applyVoltage(vol + 0.1)
+            ctx.powersupply.voltageOutput(2, vol + 0.1, 0.1, 7, 1)
             resp = ctx.tester.runCommand("next")
         elif resp == '100mv-':
-            ctx.sourcemeter.applyVoltage(vol - 0.1)
+            ctx.powersupply.voltageOutput(2, vol - 0.1, 0.1, 7, 1)
             resp = ctx.tester.runCommand("next")
         elif resp[:3] == "vok":
             print(resp[:4] + "voltage is %sv" %resp[-5:-2])
@@ -41,7 +42,7 @@ def test(ctx):
             resp = ctx.tester.runCommand("next")
         elif resp[-2:] == 'mv':
             vol = float(resp[:-2])
-            ctx.sourcemeter.applyVoltage(vol)
+            ctx.powersupply.voltageOutput(2, vol, 0.1, 7, 1)
             resp = ctx.tester.runCommand("next")
         else:
             return False

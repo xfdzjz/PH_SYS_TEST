@@ -24,8 +24,9 @@ def test(ctx):
     time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("test_adc_freq")
-    resp = ctx.tester.runCommand("next") # FIXME: check
+    resp = ctx.tester.runCommand("test_adc_freq")3
+    count = 0
+
 
     while resp !="end":
         print(resp)
@@ -46,6 +47,10 @@ def test(ctx):
             ad_vol.append(resp)
             counter.append(count)
         resp = ctx.tester.runCommand("n")
-
+        count = count + 1
+        if count == 1：
+            ctx.sourcemeter.applyVoltage(5)
+        if count == 2：
+            ctx.sourcemeter.applyVoltage(2.2)
     # FIXME: no case to return False?
     return True

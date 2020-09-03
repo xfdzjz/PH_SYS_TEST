@@ -24,8 +24,5 @@ def test(ctx):
         amp = ctx.sourmeter.ampTest()
         print("I_BVS amp is %f when VCC is 3.3v"%amp)
 
-    resp = ctx.tester.runCommand("next")
-    if resp!= 'end':
-        return False
 
     return True

@@ -20,18 +20,16 @@ def test(ctx):
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("PowerDown")
-    if resp == 'ready':
-        amp = ctx.sourmeter.ampTest()
-        print("I_pwrdown amp is %f when VCC is 3v"%amp)
-        ctx.sourmeter.applyVoltage(5)
-        amp = ctx.sourmeter.ampTest()
-        print("I_pwrdown amp is %f when VCC is 5v"%amp)
-        ctx.sourmeter.applyVoltage(2.2)
-        amp = ctx.sourmeter.ampTest()
-        print("I_pwrdown amp is %f when VCC is 2.2v"%amp)
 
-    resp = ctx.tester.runCommand("next")
-    if resp!= 'end':
-        return False
+    amp = ctx.sourmeter.ampTest()
+    print("I_pwrdown amp is %f when VCC is 3v"%amp)
+    ctx.sourmeter.applyVoltage(5)
+    amp = ctx.sourmeter.ampTest()
+    print("I_pwrdown amp is %f when VCC is 5v"%amp)
+    ctx.sourmeter.applyVoltage(2.2)
+    amp = ctx.sourmeter.ampTest()
+    print("I_pwrdown amp is %f when VCC is 2.2v"%amp)
+
+    ctx.sourmeter.applyVoltage(3.3)
 
     return True

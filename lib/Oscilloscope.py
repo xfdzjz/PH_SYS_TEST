@@ -31,6 +31,8 @@ class Oscilloscope:
     def __del__(self):
         self.inst.close()
 
+    def xincre(self):
+        return (self.inst.query(":WAVeform:XINCrement?"))
 
     def statusCheck(self): #check the status is stop or run or wait
         time.sleep(0.5)
