@@ -21,25 +21,7 @@ def test(ctx):
     if resp != 'pass':
         return False
     resp = ctx.tester.runCommand("TestCmpTrim")
-    resp = ctx.tester.runCommand(PrgWordToNVR0)
-    target_vol = resp
-    vol_len =  len(target_vol)
 
-    print(resp)
-    counter = 1
-    target = 1
-    if resp != 'fail':
-        print(resp)
-    else:
+    if resp == 'fail':
         return False
-    with open("nvr.json","r") as f:
-        data = f.read()
-        for i in ranger (0,len(data)):
-            if data[i] == ':' and target == counter:
-                data = data.replace(data[i-6:i+2],data[i-6:i+1]+target_vol,1)
-                target = 0
-            elif data[i] == ':' and target != counter:
-                counter = counter +1
-        f.write(data)
-        f.close()
     return True
