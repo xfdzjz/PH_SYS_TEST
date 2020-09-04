@@ -33,19 +33,19 @@ def initDevices(config):
             return '1234'
 
     context = TestContext()
-    # context.sourcemeter = SourceMeter(config.sourcemeter)
-    # context.powersupply = PowerSupply(config.powersupply)
-    # context.multimeter = MultiMeter(config.multimeter)
-    # context.oscilloscope = Oscilloscope(config.oscilloscope)
-    # context.tester = Tester(config.tester)
-    # context.netmatrix = NetMatrix(config.netmatrix)
+    context.sourcemeter = SourceMeter(config.sourcemeter)
+    context.powersupply = PowerSupply(config.powersupply)
+    context.multimeter = MultiMeter(config.multimeter)
+    context.oscilloscope = Oscilloscope(config.oscilloscope)
+    context.tester = Tester(config.tester)
+    context.netmatrix = NetMatrix(config.netmatrix)
     # 停止仪表待重新接线
-    # context.sourcemeter.stopAll()
-    # context.powersupply.stopAll()
-    # context.multimeter.stopAll()
-    # context.oscilloscope.stopAll()
-    # context.tester.stopAll()
-    # context.netmatrix.stopAll()
+    context.sourcemeter.stopAll()
+    context.powersupply.stopAll()
+    context.multimeter.stopAll()
+    context.oscilloscope.stopAll()
+    context.tester.stopAll()
+    context.netmatrix.stopAll()
 
     return context
 
@@ -68,12 +68,12 @@ def execute_case(case, caseDir, context):
         "\033[1;32mPASS\033[0m" if result else "\033[1;31mFAILED\033[0m"))
 
     # 停止仪表待重新接线
-    # context.sourcemeter.stopAll()
-    # context.powersupply.stopAll()
-    # context.multimeter.stopAll()
-    # context.oscilloscope.stopAll()
-    # context.tester.stopAll()
-    # context.netmatrix.stopAll()
+    context.sourcemeter.stopAll()
+    context.powersupply.stopAll()
+    context.multimeter.stopAll()
+    context.oscilloscope.stopAll()
+    context.tester.stopAll()
+    context.netmatrix.stopAll()
     context.logger.debug("")
 
 
