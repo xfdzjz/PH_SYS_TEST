@@ -14,7 +14,7 @@ from lib.Tester import Tester
 from lib.NetMatrix import NetMatrix
 
 def initLogger(fileName):
-    logger = logging.getLogger()
+    logger = logging.getLogger('CASE')
     logger.setLevel(logging.DEBUG)  # Log等级总开关
     logger.addHandler(logging.StreamHandler())
     if fileName :
