@@ -18,7 +18,8 @@ def test(ctx):
     time.sleep(0.250)
     ctx.powersupply.voltageOutput(4, 1.21, 0.1, 3.3, 1)
     resp = ctx.tester.runCommand("TestBGSTrim")
-    print(resp)
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
     if resp == 'fail':
         return False
     return True

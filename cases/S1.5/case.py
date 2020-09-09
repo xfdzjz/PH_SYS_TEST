@@ -13,11 +13,12 @@ def test(ctx):
     ctx.multimeter 未使用
     '''
     # 芯片上电VCC=3V, Channel=1
-    ctx.netmatrix.relayset(['00000000','00000000','00000000','00000000'])
+    ctx.netmatrix.arrset(['00000000','00000000','00000000','00000000'])
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
     time.sleep(0.25)
     resp = ctx.tester.runCommand("TestLRCTrim")
-    print(resp)
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
     if resp == 'fail':
         return False
     return True

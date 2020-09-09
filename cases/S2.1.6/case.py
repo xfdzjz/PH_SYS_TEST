@@ -21,20 +21,21 @@ def test(ctx):
     resp = ctx.tester.runCommand("test_volt_ref")
 
     while resp !='end':
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
         if resp[0:5] == 'ready':
             ctx.sourcemeter.applyVoltage(2)
             para = ctx.oscilloscope.volTest(2)
             avg = para[1]
-            print("VCC is 3.3v avg is %s" %(avg))
+            ctx.logger.info("VCC is 3.3v avg is %s" %(avg))
             ctx.powersupply.voltageOutput(3, 5, 0.1, 6, 1)
             para = ctx.oscilloscope.volTest(2)
             avg = para[1]
-            print("VCC is 5v avg is %s" %(avg))
+            ctx.logger.info("VCC is 5v avg is %s" %(avg))
             ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)
             para = ctx.oscilloscope.volTest(2)
             avg = para[1]
-            print("VCC is 2.2v avg is %s" %(avg))
+            ctx.logger.info("VCC is 2.2v avg is %s" %(avg))
             ctx.powersupply.voltageOutput(3, 3.3, 0.1, 6, 1)
         else:
             return False

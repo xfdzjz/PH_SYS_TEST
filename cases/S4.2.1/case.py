@@ -17,7 +17,7 @@ def test(ctx):
     ctx.netmatrix.arrset(['00000001','00000000','00000000','00000000'])#GP18->SRC case4
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
     time.sleep(0.250)
-    ctx.tester.runCommand("test_mode_sel")
+    #ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_adc_chn1_samp")
     if resp != 'ready':
@@ -25,11 +25,13 @@ def test(ctx):
 
     ctx.sourcemeter.applyVoltage(0.5)
     resp = ctx.tester.runCommand("next")
-    print(resp)
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
 
     ctx.sourcemeter.applyVoltage(1.5)
     resp = ctx.tester.runCommand("next")
-    print(resp)
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
 
     ctx.netmatrix.arrset(['01000000','00000000','00000000','00000000'])#GP06->SRC case4
     resp = ctx.tester.runCommand("test_adc_chn5_samp")
@@ -37,11 +39,13 @@ def test(ctx):
         return False
     ctx.sourcemeter.applyVoltage(0.5)
     resp = ctx.tester.runCommand("next")
-    print(resp)
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
 
     ctx.sourcemeter.applyVoltage(1.5)
     resp = ctx.tester.runCommand("next")
-    print(resp)
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
     if resp!= 'end':
         return False
 
@@ -51,10 +55,12 @@ def test(ctx):
         return False
     ctx.sourcemeter.applyVoltage(0.5)
     resp = ctx.tester.runCommand("next")
-    print(resp)
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
     ctx.sourcemeter.applyVoltage(1.5)
     resp = ctx.tester.runCommand("next")
-    print(resp) 
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
     if resp!= 'end':
         return False
 
@@ -64,24 +70,28 @@ def test(ctx):
         return False
     ctx.sourcemeter.applyVoltage(0.5)
     resp = ctx.tester.runCommand("next")
-    print(resp)
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
     ctx.sourcemeter.applyVoltage(1.5)
     resp = ctx.tester.runCommand("next")
-    print(resp) 
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
     if resp!= 'end':
         return False
-    
-    ctx.netmatrix.arrset(['00001000','00000000','00000000','00000000'])#GP07->SRC case4
+
+    ctx.netmatrix.arrset(['00001000','00000000','00000000','00000000'])#GP011->SRC case4
     resp = ctx.tester.runCommand("test_adc_chn9_samp")
     if resp != 'ready':
         return False
     ctx.sourcemeter.applyVoltage(0.5)
     resp = ctx.tester.runCommand("next")
-    print(resp)
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
     ctx.sourcemeter.applyVoltage(1.5)
     resp = ctx.tester.runCommand("next")
-    print(resp) 
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
     if resp!= 'end':
         return False
-    
+
     return True

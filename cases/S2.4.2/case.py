@@ -1,6 +1,6 @@
 
 title = "cmp反向功能"
-
+import time
 desc = '''
     relay k1 and k22 connect
 '''
@@ -27,11 +27,11 @@ def test(ctx):
     ctx.sourcemeter.applyVoltage(1.0)
 
     ctx.tester.runCommand("open_power_en")
-    ctx.tester.runCommand("test_mode_sel")
+    #ctx.tester.runCommand("test_mode_sel")
     resp = ctx.tester.runCommand("test_cmp_inv")
 
     while resp  != 'end':#check voltage of souremeter
-        print(resp)
+        ctx.logger.info(resp)
 
         if resp == 'fail':
             return False

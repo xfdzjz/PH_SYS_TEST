@@ -26,19 +26,26 @@ def test(ctx):
     resp = ctx.tester.runCommand("test_pd_sensor_out_gain")
 
     while resp != 'end':
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
         if resp == 'ready':
-            ctx.oscilloscope.prepareChannel(3, 1000, 300)
+            ctx.oscilloscope.prepareChannel(2, 1000, 300)
+            time.sleep(2)
             ctx.sourcemeter.pulseAmp(0,2e-6,70e-6)
-            wave = ctx.oscilloscope.getWave(3, 1000, 300)
+            wave = ctx.oscilloscope.getWave(2, 1000, 300)
+            for i in range(0,len(wave)):
+                wave[i] = float(wave[i])
             wave_max = max(wave)
             counter = counter + 1
-            print("wave_max is %f" %wave_max)
+            ctx.logger.info("wave_max is %f" %wave_max)
             waveMax.append(wave_max)
             count.append(counter)
+            ctx.logger.info(counter)
             resp = ctx.tester.runCommand("next")
-            if counter == 2:
-                resp = ctx.tester.runCommand("next") # FIXME: check
+            if counter == 32:
+                ctx.powersupply.voltageOutput(3, 5, 0.1, 6, 1) # FIXME: check
+            if counter == 33:
+                ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1) # FIXME: check
         else:
             return False
 

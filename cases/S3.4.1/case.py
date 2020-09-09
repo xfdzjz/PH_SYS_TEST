@@ -25,16 +25,17 @@ def test(ctx):
         para1=ctx.oscilloscope.paraTest(1)
         para2=ctx.oscilloscope.paraTest(2)
         if para1[0] == 0.25 and para1[1] == 0.5:
-            print("channel1 pass")
+            ctx.logger.info("channel1 pass")
         else:
-            print("channel1 duty is %f, fre is %f" %(para1[0],para1[1]))
+            ctx.logger.info("channel1 duty is %f, fre is %f" %(para1[0],para1[1]))
         if para2[0] == 0.25 and para2[1] == 0.5:
-            print("channel2 pass")
+            ctx.logger.info("channel2 pass")
         else:
-            print("channel2 duty is %f, fre is %f" %(para2[0],para2[1]))
+            ctx.logger.info("channel2 duty is %f, fre is %f" %(para2[0],para2[1]))
 
 
     resp = ctx.tester.runCommand("next")
+    ctx.logger.debug(resp)
     if resp!= 'end':
         return False
 

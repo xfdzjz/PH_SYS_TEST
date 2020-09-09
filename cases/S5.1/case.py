@@ -16,18 +16,21 @@ def test(ctx):
     ctx.netmatrix.arrset(['00000010','00000000','00000000','00000000'])#GP19->SRC case5 AIN00
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
     time.sleep(0.250)
-    ctx.tester.runCommand("test_mode_sel")
+    #ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_adc_chn0_samp")
+    ctx.logger.info(resp)
     if resp == 'ready':
         ctx.sourcemeter.applyVoltage(0.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
         ctx.sourcemeter.applyVoltage(1.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
-    resp = ctx.tester.runCommand("next")
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
+    #resp = ctx.tester.runCommand("next")
     if resp!= 'end':
         return False
 
@@ -35,17 +38,20 @@ def test(ctx):
     ctx.netmatrix.arrset(['00100000','00000000','00000000','00000000'])#GP04->SRC case5 AIN01
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
     time.sleep(0.250)
+    ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_adc_chn2_samp")
     if resp == 'ready':
         ctx.sourcemeter.applyVoltage(0.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
         ctx.sourcemeter.applyVoltage(1.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
-    resp = ctx.tester.runCommand("next")
+    #resp = ctx.tester.runCommand("next")
     if resp!= 'end':
         return False
 
@@ -56,13 +62,15 @@ def test(ctx):
     if resp == 'ready':
         ctx.sourcemeter.applyVoltage(0.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
         ctx.sourcemeter.applyVoltage(1.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
-    resp = ctx.tester.runCommand("next")
+    #resp = ctx.tester.runCommand("next")
     if resp!= 'end':
         return False
 
@@ -73,13 +81,15 @@ def test(ctx):
     if resp == 'ready':
         ctx.sourcemeter.applyVoltage(0.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
         ctx.sourcemeter.applyVoltage(1.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
-    resp = ctx.tester.runCommand("next")
+    #resp = ctx.tester.runCommand("next")
     if resp!= 'end':
         return False
 
@@ -90,13 +100,15 @@ def test(ctx):
     if resp == 'ready':
         ctx.sourcemeter.applyVoltage(0.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
         ctx.sourcemeter.applyVoltage(1.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
-    resp = ctx.tester.runCommand("next")
+    #resp = ctx.tester.runCommand("next")
     if resp!= 'end':
         return False
 
@@ -107,12 +119,14 @@ def test(ctx):
     if resp == 'ready':
         ctx.sourcemeter.applyVoltage(0.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
         ctx.sourcemeter.applyVoltage(1.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
-    resp = ctx.tester.runCommand("next")
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
+    #resp = ctx.tester.runCommand("next")
     if resp!= 'end':
         return False
 
@@ -124,13 +138,15 @@ def test(ctx):
     if resp == 'ready':
         ctx.sourcemeter.applyVoltage(0.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
         ctx.sourcemeter.applyVoltage(1.5)
         resp = ctx.tester.runCommand("next")
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
 
-    resp = ctx.tester.runCommand("next")
+   # resp = ctx.tester.runCommand("next")
     if resp!= 'end':
         return False
 

@@ -22,6 +22,9 @@ def test(ctx):
         return False
     resp = ctx.tester.runCommand("TestCmpTrim")
 
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
+
     if resp == 'fail':
         return False
     return True

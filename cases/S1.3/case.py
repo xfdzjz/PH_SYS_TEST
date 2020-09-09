@@ -13,13 +13,13 @@ def test(ctx):
     ctx.multimeter 未使用
     '''
     # 芯片上电VCC=3V, Channel=1
-    ctx.netmatrix.relayset(['00000000','00001000','00000000','00000000'])#ps4->gp15 1.21v
+    ctx.netmatrix.arrset(['00000000','00001000','00000000','00000000'])#ps4->gp15 1.21v
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    time.sleep(250)
+    time.sleep(0.250)
     ctx.powersupply.voltageOutput(4, 1.22, 0.1, 3.3, 1)
     resp = ctx.tester.runCommand("TestBGATrim")
-    print(resp)
-
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
     if resp == 'fail':
         return False
 

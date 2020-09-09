@@ -20,7 +20,7 @@ def test(ctx):
     ctx.netmatrix.arrset(['00000000','00000000','00010000','10000000'])#GP00 ->osc1 gp14->osc2
     ctx.powersupply.voltageOutput(1, 3.3, 0.1, 4, 1)
     time.sleep(0.250)
-    ctx.tester.runCommand("test_mode_sel")
+    #ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     ctx.oscilloscope.trig(1,'POS',0.4)
     resp = ctx.tester.runCommand("test_dcdc_volt_10p0wave")
@@ -31,25 +31,32 @@ def test(ctx):
             ctx.oscilloscope.prepareChannel(1, 1000, 5000)
             GP00 = ctx.oscilloscope.getWave(1, 1000, 5000)
             ctx.oscilloscope.trig(2,'POS',0.4)
+            time.sleep(3.2)
             while ctx.oscilloscope.statusCheck() != True:
                 end = time.time()
             ctx.oscilloscope.prepareChannel(2, 1000, 5000)
             GPI4 = ctx.oscilloscope.getWave(2, 1000, 5000)
             ctx.oscilloscope.trigSlope(3,"PGReater",0.4,8)
+            time.sleep(3.2)
             while ctx.oscilloscope.statusCheck() != True:
                 final = time.time()
             ctx.oscilloscope.prepareChannel(3, 1000, 10000)
             VH = ctx.oscilloscope.getWave(3, 1000, 10000)
-            print("VH vol is %f"% VH[len(VH)-1])
-            print ("time intv is %f" %(final-start))
+            ctx.logger.info("VH vol is %f"% VH[len(VH)-1])
+            ctx.logger.info ("time intv is %f" %(final-start))
+            ctx.logger.debug("VH vol is %f"% VH[len(VH)-1])
+            ctx.logger.debug("time intv is %f" %(final-start))
+
 
             ctx.oscilloscope.prepareChannel(3, 1000, 10000)
             VH = ctx.oscilloscope.getWave(3, 1000, 10000)
-            print("VH vol is %f"% VH[len(VH)-1])
+            ctx.logger.info("VH vol is %f"% VH[len(VH)-1])
+            ctx.logger.debug("VH vol is %f"% VH[len(VH)-1])
 
             ctx.oscilloscope.prepareChannel(3, 1000, 10000)
             VH = ctx.oscilloscope.getWave(3, 1000, 10000)
-            print("VH vol is %f"% VH[len(VH)-1])
+            ctx.logger.info("VH vol is %f"% VH[len(VH)-1])
+            ctx.logger.debug("VH vol is %f"% VH[len(VH)-1])
             resp = ctx.tester.runCommand("next")
 
 

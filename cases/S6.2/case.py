@@ -22,29 +22,31 @@ def test(ctx):
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 7, 1)#vCC
     time.sleep(0.250)
     ctx.powersupply.voltageOutput(2, 3, 0.1, 7, 1)#vh
-    ctx.tester.runCommand("test_mode_sel")
+    #ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_dcdc_vok")
 
-
+    ctx.oscilloscope.staReco()
 
     while resp != 'end':
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
         if resp == '100mv+':
-            vol = vol + 0.1
-            ctx.powersupply.voltageOutput(2, vol , 0.1, 7, 1)
+            vol = vol + 100
+            ctx.powersupply.voltageOutput(2, vol/1000 , 0.1, 7, 1)
+            ctx.logger.info(vol)
             resp = ctx.tester.runCommand("next")
         elif resp == '100mv-':
-            vol = vol - 0.1
-            ctx.powersupply.voltageOutput(2, vol , 0.1, 7, 1)
+            vol = vol - 100
+            ctx.powersupply.voltageOutput(2, vol/1000 , 0.1, 7, 1)
             resp = ctx.tester.runCommand("next")
         elif resp[:3] == "vok":
-            print(resp[:4] + "voltage is %sv" %resp[-5:-2])
+            ctx.logger.info(resp[:4] + "voltage is %sv" %resp[-5:-2])
             vol = float(resp[-5:-2])
             resp = ctx.tester.runCommand("next")
         elif resp[-2:] == 'mv':
             vol = float(resp[:-2])
-            ctx.powersupply.voltageOutput(2, vol, 0.1, 7, 1)
+            ctx.powersupply.voltageOutput(2, vol/1000, 0.1, 7, 1)
             resp = ctx.tester.runCommand("next")
         else:
             return False

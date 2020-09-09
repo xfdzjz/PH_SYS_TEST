@@ -29,10 +29,10 @@ def test(ctx):
     ctx.sourcemeter.applyCurrent(0.01)
     while resp !='end':
         if resp == "ready":
-
             ctx.powersupply.channelOn(1)
             curr = ctx.powersupply.measure(1,"CURRent")
-            print("current is %s ampere" %curr)
+            ctx.logger.info("current is %s ampere" %curr)
+            ctx.logger.debug("current is %s ampere" %curr)
             resp = ctx.tester.runCommand("next")
         else:
             return False

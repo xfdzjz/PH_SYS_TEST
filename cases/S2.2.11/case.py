@@ -19,14 +19,15 @@ def test(ctx):
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("ISRCA5uA")
-    print(resp)
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
     if resp == 'ready':
         vol = ctx.sourcemeter.volTest()
-        print("Visrca vol is %f"%vol)
+        ctx.logger.info("Visrca vol is %f"%vol)
 
     resp = ctx.tester.runCommand("next")
     if resp!= 'end':
-        print(resp)
+        ctx.logger.info(resp)
         return False
 
     return True

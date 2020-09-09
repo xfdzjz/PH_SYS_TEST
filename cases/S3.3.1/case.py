@@ -17,21 +17,22 @@ def test(ctx):
     ctx.netmatrix.arrset(['10000000','00000000','00000000','00000000'])#GP12->SRC
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
     time.sleep(0.250)
-    ctx.sourmeter.applyVoltage(0.2)
-    ctx.tester.runCommand("test_mode_sel")
+    ctx.sourcemeter.applyVoltage(0.2)
+    #ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("thermdrvOnVoltDrop")
     if resp == 'ready':
-        amp = ctx.sourmeter.ampTest()
-        print("thermdrv amp is %f when VCC is 3v"%amp)
+        amp = ctx.sourcemeter.ampTest()
+        ctx.logger.info("thermdrv amp is %f when VCC is 3v"%amp)
         ctx.powersupply.voltageOutput(3, 5, 0.1, 3.3, 1)
-        amp = ctx.sourmeter.ampTest()
-        print("thermdrv amp is %f when VCC is 5v"%amp)
+        amp = ctx.sourcemeter.ampTest()
+        ctx.logger.info("thermdrv amp is %f when VCC is 5v"%amp)
         ctx.powersupply.voltageOutput(3, 2.2, 0.1, 3.3, 1)
-        amp = ctx.sourmeter.ampTest()
-        print("thermdrv amp is %f when VCC is 2.2v"%amp)
+        amp = ctx.sourcemeter.ampTest()
+        ctx.logger.info("thermdrv amp is %f when VCC is 2.2v"%amp)
 
     resp = ctx.tester.runCommand("next")
+    ctx.logger.debug(resp)
     if resp!= 'end':
         return False
 

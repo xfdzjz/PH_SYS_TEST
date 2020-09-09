@@ -34,8 +34,9 @@ def test(ctx):
             freq = float(para[1])
 
 
-            print("duty is %f percent, frequency is %f"%(duty,freq))
-            print(wave)
+            ctx.logger.info("duty is %f percent, frequency is %f"%(duty,freq))
+            ctx.logger.debug("duty is %f percent, frequency is %f"%(duty,freq))
+            #ctx.logger.info(wave)
             resp = ctx.tester.runCommand("next")
         else:
             return False

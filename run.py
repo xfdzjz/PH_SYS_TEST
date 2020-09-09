@@ -12,6 +12,7 @@ from lib.MultiMeter import MultiMeter
 from lib.Oscilloscope import Oscilloscope
 from lib.Tester import Tester
 from lib.NetMatrix import NetMatrix
+from lib.excel import Excel
 
 def initLogger(fileName):
     logger = logging.getLogger()
@@ -39,6 +40,7 @@ def initDevices(config):
     context.oscilloscope = Oscilloscope(config.oscilloscope)
     context.tester = Tester(config.tester)
     context.netmatrix = NetMatrix(config.netmatrix)
+    context.excel = Excel(config.excel)
     # 停止仪表待重新接线
     context.sourcemeter.stopAll()
     context.powersupply.stopAll()

@@ -29,23 +29,29 @@ def test(ctx):
         if resp == "ready1":
             vol = ctx.powersupply.measure(2, "VOLTage")
             if vol >  5.2 and vol < 5.25:
-                print ("VH output voltage pass %f" %vol)
+                ctx.logger.info ("VH output voltage pass %f" %vol)
+                ctx.logger.debug("VH output voltage pass %f" %vol)
             else:
-                print ("VH output voltage is %f" %vol)
+                ctx.logger.info ("(failed) VH output voltage is %f" %vol)
+                ctx.logger.debug("(failed) VH output voltage pass %f" %vol)
             resp = ctx.tester.runCommand("next")
         elif resp == "ready2":
             vol = ctx.powersupply.measure(2, "VOLTage")
             if vol >  5.75 and vol < 5.8:
-                print ("VH output voltage pass %f" %vol)
+                ctx.logger.info ("VH output voltage pass %f" %vol)
+                ctx.logger.debug("VH output voltage pass %f" %vol)
             else:
-                print ("VH output voltage is %f" %vol)
+                ctx.logger.info ("(failed) VH output voltage is %f" %vol)
+                ctx.logger.debug("(failed) VH output voltage is %f" %vol)
             resp = ctx.tester.runCommand("next")
         elif resp == "ready3":
             vol = ctx.powersupply.measure(2, "VOLTage")
             if vol >  6.025 and vol < 6.0525:
-                print ("VH output voltage pass %f" %vol)
+                ctx.logger.info ("VH output voltage pass %f" %vol)
+                ctx.logger.debug("VH output voltage pass %f" %vol)
             else:
-                print ("VH output voltage is %f" %vol)
+                ctx.logger.info ("(failed) VH output voltage is %f" %vol)
+                ctx.logger.debug("(failed) VH output voltage is %f" %vol)
             resp = ctx.tester.runCommand("next")
         elif resp == "ready4":
             resp = ctx.tester.runCommand("next")

@@ -1,4 +1,4 @@
-
+import time
 title = "CMP通道遍历"
 
 desc = '''
@@ -28,7 +28,7 @@ def test(ctx):
 
 
     ctx.tester.runCommand("open_power_en")
-    ctx.tester.runCommand("test_mode_sel")
+    #ctx.tester.runCommand("test_mode_sel")
     resp = ctx.tester.runCommand("test_cmp_chn")
 
     if resp != 'ready':
@@ -50,7 +50,7 @@ def test(ctx):
         ['10000000', '00000000', 2.5, 1.5 ], #GP00,int
         ['10000000', '00000000', 1.0, 1.5 ], #GP00,int
         ['10000000', '00000000', 2.5, 1.5 ], #GP00,int
-        ['10000000', '00000000', 2.5, 1.5 ], #GP00,int        
+        ['10000000', '00000000', 1.0, 1.5 ], #GP00,int
         ['10000000', '00000001', 1.5, 2.5 ], #GP00,18
         ['10000000', '00000001', 1.5, 1.0 ], #GP00,18
         ['00000010', '00000001', 1.5, 2.5 ], #GP15,18
@@ -73,9 +73,13 @@ def test(ctx):
         ctx.netmatrix.arrset(['00000000',params[i][0],params[i][1],'00000000'])
         ctx.powersupply.voltageOutput(4, params[i][3], 0.1, 3.3, 1)#v2
         ctx.powersupply.voltageOutput(2, params[i][2], 0.1, 3.3, 1)#v1
-        resp = ctx.tester.runCommand("next")    
+        resp = ctx.tester.runCommand("next")
         PassOrFail.append(resp)
 
-    print(PassOrFail)
+    ctx.logger.info(PassOrFail)
+    ctx.logger.debug(PassOrFail)
+    if PassOrFail[-1]  != 'end':
+        return False
+
 
     return True
