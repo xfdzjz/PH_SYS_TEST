@@ -15,7 +15,7 @@ from lib.NetMatrix import NetMatrix
 from lib.excel import Excel
 
 def initLogger(fileName):
-    logger = logging.getLogger()
+    logger = logging.getLogger('CASE')
     logger.setLevel(logging.DEBUG)  # Log等级总开关
     logger.addHandler(logging.StreamHandler())
     if fileName :
