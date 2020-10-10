@@ -1,80 +1,149 @@
-from keithley2600 import Keithley2600
 import time
+import logging
+import serial
+import numpy as np
 
 class SourceMeter:
     def __init__(self, config):
-        self.volt = Keithley2600(config["tcp_addr"])
+        self.port = serial.Serial(config["port"], config["baudRate"],timeout=2)
+
 
     def __del__(self):
-        self.volt.disconnect()
+        try:
+            self.port.close()
+        except:
+            pass
 
     def stopAll(self):
         # 复位到待接线状态
-        self.volt.applyVoltage(self.volt.smua, 0)
+        self.runCommand('smua.source.levelv = 0')
+        self.runCommand('smua.source.output = smua.OUTPUT_OFF')
+
+    def runCommand(self, cmd):# communication using serial port and how much string number will be read
+        self.port.write((cmd+'\r\n').encode('ascii')) # command ending char " "
+
+
+    def readCommand(self, cmd):# communication using serial port and how much string number will be read
+        self.port.write((cmd+'\r\n').encode('ascii')) # command ending char " "
+        time.sleep(0.5)
+        readVal = self.port.read_all()
+        val = readVal.decode("ascii")
+        return val
+
 
     def applyVoltage(self,vol):
-        self.volt.applyVoltage(self.volt.smua, vol)
+        if vol <=5.0 and vol >=-1:
+            self.runCommand('smua.source.func = smua.OUTPUT_DCVOLTS')
+            self.runCommand('smua.source.levelv = %f' %vol)
+            self.runCommand('smua.source.output = smua.OUTPUT_ON')
+        else:
+            raise SystemError
+
+    def applyVol(self,vol):
+        if vol <=10.1 and vol >=-1:
+            self.runCommand('smua.source.func = smua.OUTPUT_DCVOLTS')
+            self.runCommand('smua.source.levelv = %f' %vol)
+            self.runCommand('smua.source.output = smua.OUTPUT_ON')
+        else:
+            raise SystemError
+
+
 
     def applyCurrent(self,amp):
-        self.volt.applyCurrent(self.volt.smua, amp)
+        self.runCommand('smua.cal.polarity = smua.CAL_POSITIVE')
+        if amp <=5.0 and amp >=-1:
+            self.runCommand('smua.source.func = smua.OUTPUT_DCAMPS')
+            self.runCommand('smua.source.leveli = %f' %amp)
+            self.runCommand('smua.source.output = smua.OUTPUT_ON')
+        else:
+            raise SystemError
 
 
-    def rampvol(self,start,target,step,de):# supply ramp voltage
-        self.volt.smua.trigger.source.action = self.volt.smua.ENABLE
-        self.volt.smua.trigger.measure.action = self.volt.smua.DISABLE
-        self.volt.rampToVoltage(self.volt.smua, start , target,  de , step)
+    # def rampvol(self,start,target,step,de):# supply ramp voltage
+    #     smua.trigger.source.action = smua.ENABLE
+    #     smua.trigger.measure.action = smua.DISABLE
+    # rampToVoltage(self.volt.smua, start , target,  de , step)
 
     def pulseTest(self,start,delay,target):
-        self.volt.applyVoltage(self.volt.smua, 0)
-        self.volt.applyVoltage(self.volt.smua, start)
+        self.applyVoltage( 0)
+        self.applyVoltage(start)
         time.sleep(delay)
-        self.volt.applyVoltage(self.volt.smua, target)
+        self.applyVoltage(target)
 
     def volTest(self):
-        vol = self.volt.smua.measure.v()
-        return vol
+        self.runCommand('smua.source.rangev = 5.5')
+        return float(self.readCommand('print(smua.measure.v())'))
+
 
     def ampTest(self):
-        amp = self.volt.smua.measure.i()
+        self.runCommand('smua.source.output = smua.OUTPUT_ON')
+        self.runCommand('smua.source.rangei = 0.1')
+        amp =  self.readCommand('print(smua.measure.iv())')
+        for i in range(0,len(amp)):
+            if amp[i]== 'e':
+                print(amp[0:i+4])
+                amp = float(amp[0:i+4])
+                break
         return amp
 
-    def pulseAmp(self, start, target,targetDelay): # supply one pulse ampere
-        #self.volt.smua.source.outputenableaction = 0
-        #self.volt.digio.trigger[digioPin].overrun= True
-        #self.volt.digio.trigger[digioPin].stimulus = 4
-        #self.volt.digio.trigger[digioPin].pulsewidth = 0.0001
-        #self.volt.digio.trigger[digioPin].mode=2
-        #if self.volt.digio.trigger[digio_pin].wait(1) == True:
-        self.volt.smua.trigger.source.listi({start,target})
-        self.volt.smua.trigger.source.action = self.volt.smua.ENABLE
-        self.volt.smua.trigger.measure.action = self.volt.smua.DISABLE
-        self.volt.smua.trigger.source.limiti = 0.1
-        self.volt.smua.source.rangev = 5
-        self.volt.trigger.timer[2].clear()
-        self.volt.trigger.timer[2].delay = targetDelay
-        self.volt.trigger.timer[2].count = 2
-        self.volt.trigger.timer[2].passthrough = True
-        self.volt.trigger.timer[2].stimulus = self.volt.smua.trigger.SOURCE_COMPLETE_EVENT_ID
-        self.volt.smua.trigger.source.stimulus = 0
-        self.volt.smua.trigger.endpulse.action = self.volt.smua.SOURCE_HOLD
-        self.volt.smua.trigger.endpulse.stimulus = self.volt.trigger.timer[2].EVENT_ID
-        self.volt.smua.trigger.count = 2
-        self.volt.smua.trigger.arm.count = 2
-        self.volt.smua.source.output = self.volt.smua.OUTPUT_ON
-        self.volt.smua.trigger.initiate()
-        self.volt.waitcomplete()
 
-        print("done")
-        #else:
-            #print("there is no pulse")
+    def channel(self,on):
+        if on == 'on':
+            self.runCommand('smua.source.output = smua.OUTPUT_ON')
+        elif on == 'off':
+            self.runCommand('smua.source.output = smua.OUTPUT_OFF')
+
+    def pulseAmp(self, start, target,targetDelay): # supply one pulse ampere
+    #self.volt.smua.source.outputenableaction = 0
+    #self.volt.digio.trigger[digioPin].overrun= True
+    #self.volt.digio.trigger[digioPin].stimulus = 4
+    #self.volt.digio.trigger[digioPin].pulsewidth = 0.0001
+    #self.volt.digio.trigger[digioPin].mode=2
+    #if self.volt.digio.trigger[digio_pin].wait(1) == True:
+        self.runCommand('smua.trigger.source.listi({%f,%f})' %(start,target))
+        self.runCommand('smua.trigger.source.action = smua.ENABLE')
+        self.runCommand('smua.trigger.measure.action = smua.DISABLE')
+        self.runCommand('smua.trigger.source.limiti = 0.1')
+        self.runCommand('smua.source.rangev = 5')
+        self.runCommand('trigger.timer[2].clear()')
+        self.runCommand('trigger.timer[2].delay = %f' %targetDelay)
+        self.runCommand('trigger.timer[2].count = 2')
+        self.runCommand('trigger.timer[2].passthrough = True')
+        self.runCommand('trigger.timer[2].stimulus = smua.trigger.SOURCE_COMPLETE_EVENT_ID')
+        self.runCommand('smua.trigger.source.stimulus = 0')
+        self.runCommand('smua.trigger.endpulse.action = smua.SOURCE_HOLD')
+        self.runCommand('smua.trigger.endpulse.stimulus = trigger.timer[2].EVENT_ID')
+        self.runCommand('smua.trigger.count = 2')
+        self.runCommand('smua.trigger.arm.count = 2')
+        self.runCommand('smua.source.output = smua.OUTPUT_ON')
+        self.runCommand('smua.trigger.initiate()')
+        self.runCommand('waitcomplete()')
+
+    print("done")
+
+    def rampvol(self,start,target,de,steps):
+        self.runCommand('smu.source.output = smu.OUTPUT_ON')
+        vcurr = start
+        if vcurr == target:
+            return
+        self.runCommand('display.smua.measure.func = display.MEASURE_DCVOLTS')
+        step = np.sign(target - vcurr) * abs(steps)
+        for v in np.arange(vcurr, target, step):
+             self.runCommand('smua.source.levelv = %f' %v)
+             time.sleep(de)
+        self.runCommand('smua.source.levelv = target')
+        self.runCommand('beeper.beep(0.3, 2400)')
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
-    # Unit test
-    m = SourceMeter({"tcp_addr":"TCPIP0::172.16.60.100::INSTR"})
-    input("Press ENTER to continue")
-    print("Output 1V")
-    m.applyVoltage(1)
-    #m.rampvol(0,10,1,1)
-    #m.pulse_amp(0.1,0.5,20,4)
+    m = SourceMeter({"tcp_addr":"TCPIP0::172.16.60.100::INSTR","port":"COM7","baudRate": 115200})
+    print(m.volTest())
+
     print("PASS")

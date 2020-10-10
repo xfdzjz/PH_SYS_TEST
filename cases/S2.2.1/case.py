@@ -15,29 +15,34 @@ def test(ctx):
     # 芯片上电VCC=3V, Channel=1
     ctx.netmatrix.arrset(['00001000','00000000','00000000','00000000'])#GP15->src
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    ctx.tester.runCommand("test_mode_sel")
-    ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("V1P5STest")
+    time.sleep(0.500)
+    ctx.tester.runCommand("test_mode_sel",0.2)
+    ctx.tester.runCommand("open_power_en",0.2)
+    resp = ctx.tester.runCommand("V1P5STest",3)
     counter = 0
 
 
     while resp !='end':
-        print(resp)
+        ctx.logger.info(resp)
+        ctx.logger.debug(resp)
         if resp == 'ready':
             if counter == 0:
-                print("V1P5S 1.5V")
+                ctx.logger.info("V1P5S 1.5V")
             else:
-                print("V1P5S 1.2V")
+                ctx.logger.info("V1P5S 1.2V")
             vol = ctx.sourcemeter.volTest()
-            print("VCC is 3.3v vol is %f" %vol)
+            ctx.logger.info("VCC is 3.3v vol is %f" %vol)
             ctx.powersupply.voltageOutput(3, 5, 0.1, 6, 1)
+            time.sleep(0.500)
             vol = ctx.sourcemeter.volTest()
-            print("VCC is 5v vol is %f" %vol)
-            ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)
+            ctx.logger.info("VCC is 5v vol is %f" %vol)
+            ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)#voltageOutput(self, channel, V, I, ovp, ocp)
+            time.sleep(0.500)
             vol = ctx.sourcemeter.volTest()
-            print("VCC is 2.2v vol is %f" %vol)
+            ctx.logger.info("VCC is 2.2v vol is %f" %vol)
             ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
-            resp = ctx.tester.runCommand("next")
+            time.sleep(0.500)
+            resp = ctx.tester.runCommand("next",2)
             counter = counter +1
         else:
             return False

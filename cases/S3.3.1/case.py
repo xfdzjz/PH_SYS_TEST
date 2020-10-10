@@ -1,13 +1,10 @@
 
-title = "CMP迟滞功能"
+import time
+title = "Thermdrv导通压降"
 
 desc = '''
-    在时钟trim后做此项测试
-    稳压源 Channel1 <=> VCC
-    稳压源 Channel2 <=> GP18
-    源表 <=> GP00
+    relay k1 connect
 '''
-
 
 def test(ctx):
     '''
@@ -15,33 +12,28 @@ def test(ctx):
     ctx.sourcemeter 未使用
     ctx.multimeter 未使用
     '''
-    ctx.oscilloscope.prepareChannel(3, 1000, 300)
-    ctx.oscilloscope.getWave(3, 1000, 300)
+    # 芯片上电VCC=3V, Channel=1
 
-    # 芯片上电VCC=3V
-    ctx.powersupply.voltageOutput(1, 3, 0.1, 3.3, 1)
-    gp00vol = 1.2
+    ctx.netmatrix.arrset(['10000000','00000000','00000000','00000000'])#GP12->SRC
+    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
+    time.sleep(0.250)
+    ctx.sourcemeter.applyVoltage(0.2)
+    ctx.tester.runCommand("test_mode_sel",0.2)
+    ctx.tester.runCommand("open_power_en",0.2)
+    resp = ctx.tester.runCommand("thermdrvOnVoltDrop")
+    print(resp)
+    if resp == 'ready':
+        amp = ctx.sourcemeter.ampTest()
+        ctx.logger.info("thermdrv amp is %f when VCC is 3v"%amp)
+        ctx.powersupply.voltageOutput(3, 5, 0.1, 3.3, 1)
+        amp = ctx.sourcemeter.ampTest()
+        ctx.logger.info("thermdrv amp is %f when VCC is 5v"%amp)
+        ctx.powersupply.voltageOutput(3, 2.2, 0.1, 3.3, 1)
+        amp = ctx.sourcemeter.ampTest()
+        ctx.logger.info("thermdrv amp is %f when VCC is 2.2v"%amp)
 
-    # dc ps channel2 apply 1.2v to GP18
-    ctx.powersupply.voltageOutput(2, 1.2, 0.1, 3.3, 1)
-    ctx.sourcemeter.applyVoltage(gp00vol)  # sourcemeter apply 1.2v to GP00
-    ctx.tester.runCommand("open_power_en")
-    ctx.tester.runCommand("test_model_sel")
-    resp = ctx.tester.runCommand("test_cmp_hys")
+    resp = ctx.tester.runCommand("next",2)
+    ctx.logger.debug(resp)
 
-    while resp != 'end':  # check voltage of souremeter
-        print("GP00=%f resp: %s" % (gp00vol, resp))
 
-        if resp == '1mv+':
-            gp00vol = gp00vol + 0.001
-            ctx.sourcemeter.applyVoltage(gp00vol)
-        elif resp == '1mv-':
-            gp00vol = gp00vol - 0.001
-            ctx.sourcemeter.applyVoltage(gp00vol)
-        elif resp[:6] == 'result':
-            # showing the result voltage of abs(V1-V0)
-            print("vol diff is %s mv" % resp[-2:])
-        else:
-            return False
-        resp = ctx.tester.runCommand("next")
     return True

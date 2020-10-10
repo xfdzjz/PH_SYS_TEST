@@ -59,9 +59,9 @@ class NetMatrix:
 
 if __name__ == "__main__":
     # Unit test
-    N = NetMatrix({"port": "COM7", "baudRate": 115200})
+    N = NetMatrix({"port": "COM9", "baudRate": 115200})
     # N.runcommand(b'\x00\x01\x01\x00\x00\x00')
-    input("Press ENTER to continue")
-    N.arrset(['00001000','00000000','10001000','00000001'])
+    #input("Press ENTER to continue")
+    N.arrset(['00000010','00000000','00000000','00000000'])
     #N.toCmd(['11111111','11111111','11111111','11111111'])
 

@@ -13,14 +13,14 @@ def test(ctx):
     ctx.multimeter 未使用
     '''
     # 芯片上电VCC=3V, Channel=3
-    ctx.netmatrix.relayset(['00000000','00000000','00000000','00000000'])
+    ctx.netmatrix.arrset(['00000000','00000000','00000000','00000000'])
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-
-
-    resp = ctx.tester.runCommand("TestHrcTrim")
-    print(resp)
+    time.sleep(0.25)
+    resp = ctx.tester.runCommand("TestHrcTrim",2)
+    ctx.logger.info(resp)
     while resp != 'end':
         if resp == 'fail':
             return False
-        resp = ctx.tester.runCommand("next")
+        resp = ctx.tester.runCommand("next",2)
+        ctx.logger.info(resp)
     return True

@@ -1,5 +1,5 @@
 import time
-title = "ADC采样输入通道遍历"
+title = "LVD检测"
 
 desc = '''
     relay k5,k14 connect
@@ -13,39 +13,32 @@ def test(ctx):
     ctx.multimeter 未使用
     ctx.oscilloscope  未使用
     '''
-    count = 0
-    step = 0
-    ad_vol = []
-    counter = []
+
     # 芯片上电VCC=3V
-    #ctx.powersupply.voltageOutput(1, 3, 0.1, 5, 1)
-    ctx.netmatrix.arrset(['01000000','00010000','00000000','00000000'])#GP04->src GP14->vref
-    ctx.sourcemeter.applyVoltage(3.3)
-    ctx.tester.runCommand("test_mode_sel")
-    ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("test_adc_ext_vCC")
-    resp = ctx.tester.runCommand("next")
+    ctx.netmatrix.arrset(['01000000','00000000','00000000','00000000'])#GP04->src
 
-    while resp !="end":
-        if resp[-2:] == 'mv':
-            vol = float(resp[:-2])
-            step = vol / 4096
-        for count in (0,4095):
-            ctx.sourcemeter.applyVoltage(count*step)
-            resp = ctx.tester.runCommand("n")
-            print(resp)
-            ad_vol.append(resp)
-            counter.append(count)
-        for count in (4095,0):
-            ctx.sourcemeter.applyVoltage(count*step)
-            count = count -1
-            resp = ctx.tester.runCommand("n")
-            print(resp)
-            ad_vol.append(resp)
-            counter.append(count)
-        resp = ctx.tester.runCommand("n")
+    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
+    time.sleep(0.250)
+    ctx.tester.runCommand("test_mode_sel",0.2)
+    ctx.tester.runCommand("open_power_en",0.2)
+    resp = ctx.tester.runCommand("test_ref_sel",2)
+    count = 0
 
-
-
-
+    while resp!='end':
+        ctx.logger.info(resp)
+        if resp =='ready':
+            ctx.logger.debug(resp)
+        if count %2 == 0:
+            ctx.sourcemeter.applyVoltage(0.5)
+            count = count + 1
+            resp = ctx.tester.runCommand("next")
+        elif count %2 ==1:
+            ctx.sourcemeter.applyVoltage(1.5)
+            count = count + 1
+            resp = ctx.tester.runCommand("next")
+            ctx.netmatrix.arrset(['01000000','00010000','00000000','00000000'])##GP04->src,GP14->vref
+            ctx.powersupply.voltageOutput(4, 2.5, 0.1, 5, 1)
+        else :
+            return False
+    print('pass')
     return True

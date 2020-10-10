@@ -22,7 +22,7 @@ class Oscilloscope:
         rm = visa.ResourceManager()
         inst = rm.open_resource(config["tcp_addr"])
         self.inst = inst
-        #self.inst.write(":SINGLe")
+        self.inst.write(":CLEar")
 
 
     def ind(self):
@@ -51,9 +51,10 @@ class Oscilloscope:
         self.inst.write(":STOP")
         pass
 
+    def runsta(self):
+        self.inst.write(":RUN ")
 
-
-    def trig(self, channel,triSlope,triVol,scale,vscale):#set trigger model
+    def trig(self, channel,triSlope,triVol,scale= 0.001,vscale = 1):#set trigger model
         self.inst.write(":SINGle")
         self.inst.write(":TRIGger:MODE EDGe")
         self.inst.write(":TRIGger:EDGe:SOURce CHANnel%d" %channel)
@@ -63,15 +64,16 @@ class Oscilloscope:
         self.inst.write(":CHANnel%d:SCALe %f "%(channel,vscale))
 
 
-    def trigMul(self, channel,triSlope,triVol,scale,vscale):#set trigger model
+    def trigMul(self, channel,triSlope,triVol,scale =  0.001,vscale = 1):#set trigger model
         self.inst.write(":RUN")
+        self.inst.write(":TRIGger:MODE EDGe")
         self.inst.write(":TRIGger:EDGe:SOURce CHANnel%d" %channel)
         self.inst.write(":TRIGger:EDGe:SLOPe %s" %triSlope)
         self.inst.write(":TRIGger:EDGe:LEVel %f" %triVol)
         self.inst.write(":TIMebase:MAIN:SCALe %f" %scale)
         self.inst.write(":CHANnel%d:SCALe %f "%(channel,vscale))
 
-    def trigSlope(self, channel, PGReater,time,triVol,scale,vscale):#set trigger model
+    def trigSlope(self, channel, PGReater,time,triVol,scale = 0.5,vscale=1):#set trigger model
         self.inst.write(":RUN")
         self.inst.write(":TRIGger:SLOPe:SOURce CHANnel%d" %channel)
         self.inst.write(":TRIGger:SLOPe:WHEN %s" %PGReater)#PGReater
@@ -80,6 +82,19 @@ class Oscilloscope:
         self.inst.write(":REFerence%d:SAVe" %channel)
         self.inst.write(":TIMebase:MAIN:SCALe %f" %scale)#time scale
         self.inst.write(":CHANnel%d:SCALe  %f "%(channel,vscale))#vertical scale like 2 means 2v
+
+    def trigPluse(self, channel, PGReater,width,time,triVol,scale = 0.5,vscale=1):#set trigger model
+        self.inst.write(":RUN")
+        self.inst.write(":TRIGger:PULSe:SOURce CHANnel%d" %channel)
+        self.inst.write(":TRIGger:PULSe:WHEN %s" %PGReater)#PGReater
+        self.inst.write(":TRIGger:PULSe:TIME %f" %time)
+        self.inst.write(":TRIGger:PULSe:WIDTh  %f" %width)
+        self.inst.write(":TRIGger:PULSe:LEVel %f" %triVol)
+        self.inst.write(":REFerence%d:SAVe" %channel)
+        self.inst.write(":TIMebase:MAIN:SCALe %f" %scale)#time scale
+        self.inst.write(":CHANnel%d:SCALe  %f "%(channel,vscale))#vertical scale like 2 means 2v
+
+
 
 
     def prepareChannel(self, channel, hz, count):  # vol_test_one
@@ -105,10 +120,11 @@ class Oscilloscope:
 
         for i in range(0,len(val)-1):
             val[i] = float(val[i])
-        print("read_data length is %d" %i)
+
+        print("read_data length is %d" %len(val))
         return (val)
 
-    def readRamData(self,channel,count,start,final):
+    def readRamData(self,channel,count,start,final, do ='false'):
         data = []
         j=0
         self.inst.write(":STOP")
@@ -123,14 +139,16 @@ class Oscilloscope:
         val[0] = val[0][11:]
         val[len(val)-1] = val[len(val)-1] [:-1]
         print(len(val))
+        if do == 'false':
+            for i in range(0,len(val)):
+                val[i] = float(val[i])
+                #val[i] = round(val[i])val,
+            while val[j] <= 3:
+                j=j+1
 
-        for i in range(0,len(val)):
-            val[i] = float(val[i])
-            #val[i] = round(val[i])val,
-        while val[j] <= 3:
-            j=j+1
-
-        return val,j
+            return val,j
+        else:
+            return val
                 #print("val is greater than 0.5 in number %d, val is %f"%(i,val[i]))
         #for i in range(1,final,ramSpace):
         #    print("wave data are ")
@@ -140,12 +158,12 @@ class Oscilloscope:
 
     def volTest(self, channel):
         vol = []
-        self.inst.write(":RUN")
         self.inst.write(":MOD ON")
+        self.inst.write(":RUN")
         self.inst.write(":MEASure:ADISplay ON")
         self.inst.write(":MEASure:SSOURce CHANnel%d" %channel)
         self.inst.write(":MEASure:ITEM PDUTy,CHANnel%d"%channel)
-        self.inst.write(":MEASure:STATistic:DISPlay ON")
+        #self.inst.write(":MEASure:STATistic:DISPlay ON")
         base = self.inst.query(":MEASure:ITEM? VBASe,CHANnel%d" % channel)
         avg = self.inst.query(":MEASure:ITEM? VAVG,CHANnel%d" % channel)
         top = self.inst.query(":MEASure:ITEM? VTOP,CHANnel%d" % channel)
@@ -162,19 +180,44 @@ class Oscilloscope:
 
     def paraTest(self,channel):
         para = []
-        self.inst.write(":MOD ON")
+
+        # self.inst.write(":MEASure:CLEar ALL")
+        # self.inst.write(":RUN")
+        # self.inst.write(":MEASure:ADISplay ON")
+        # self.inst.write(":MEASure:SSOURce CHANnel%d" %channel)
+        # self.inst.write(":MEASure:ITEM PDUTy,CHANnel%d"%channel)
+        # time.sleep(1)
+        # duty = self.inst.query(":MEASure:ITEM? PDUTy,CHANnel%d"%channel)
+        # time.sleep(1)
+        # self.inst.write(":MEASure:CLEar ALL")
+        # self.inst.write(":MEASure:ITEM FREQuency,CHANnel%d"%channel)
+        # time.sleep(1)
+        # frequency = self.inst.query(":MEASure:ITEM? FREQuency,CHANnel%d"%channel)
+        # print(duty)
+        # print(frequency)
+        # para.append(float(duty))
+        # para.append(float(frequency))
+        # self.inst.write(":MEASure:ADISplay OFF")
+        # #self.inst.write(":MOD OFF")
+        # self.inst.write(":STOP")
+        self.inst.write(":MEASure:CLEar ALL")
         self.inst.write(":RUN")
-        self.inst.write(":MEASure:ADISplay ON")
         self.inst.write(":MEASure:SSOURce CHANnel%d" %channel)
         self.inst.write(":MEASure:ITEM PDUTy,CHANnel%d"%channel)
-        #self.inst.write(":MEASure:STATistic:DISPlay ON")
-        duty = self.inst.query(":MEASure:ITEM? PDUTy,CHANnel%d"%channel)
         self.inst.write(":MEASure:ITEM FREQuency,CHANnel%d"%channel)
+        self.inst.write(":MEASure:ADISplay ON")
+        time.sleep(0.3)
+        self.inst.write(":MEASure:ADISplay OFF")
+        duty = self.inst.query(":MEASure:ITEM? PDUTy,CHANnel%d"%channel)
         frequency = self.inst.query(":MEASure:ITEM? FREQuency,CHANnel%d"%channel)
+        self.inst.write(":STOP")
         para.append(float(duty))
         para.append(float(frequency))
-        print('para')
         return para
+
+    def xincre(self):
+        return self.inst.query (":WAVeform:XINCrement? ")
+
 
     def getVoltage(self, channel):
         # TODO: calc a mean value here

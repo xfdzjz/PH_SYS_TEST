@@ -1,58 +1,44 @@
+
 import time
-title = "pwrMgr模块"
+title = "BZ pwm功能"
 
 desc = '''
-    稳压源 Channel2 <=> VCC
-    源表 <=> V1P5S/V1P5D
+relay k6,k10 connect
 '''
-
 
 def test(ctx):
     '''
     ctx为测试上下文对象，包含初始化好的各测试仪表
+    ctx.sourcemeter 未使用
     ctx.multimeter 未使用
-    ctx.oscilloscope  未使用
     '''
-    count = []
+    # 芯片上电VCC=3V, Channel=1
 
-    vol = []
+    ctx.netmatrix.arrset(['00000000','00000010','01000000','00100000'])#Horns,b->osc1,2
+    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
+    time.sleep(0.250)
+    ctx.powersupply.voltageOutput(2, 10.5, 0.1, 11, 1)#vh
+    ctx.tester.runCommand("test_mode_sel",0.2)
+    ctx.tester.runCommand("open_power_en",0.2)
+    resp = ctx.tester.runCommand("bzPwmMode",2)
+    if resp == 'ready':
+        time.sleep(2)
+        input('n')
+        para1=ctx.oscilloscope.paraTest(1)
+        para2=ctx.oscilloscope.paraTest(2)
+        if para1[0] == 0.25 and para1[1] == 0.5:
+            ctx.logger.info("channel1 pass")
+        else:
+            ctx.logger.info("channel1 duty is %f, fre is %f" %(para1[0],para1[1]))
+        if para2[0] == 0.25 and para2[1] == 0.5:
+            ctx.logger.info("channel2 pass")
+        else:
+            ctx.logger.info("channel2 duty is %f, fre is %f" %(para2[0],para2[1]))
 
-    # 芯片上电VCC=3V
-    ctx.powersupply.voltageOutput(2, 3, 0.1, 3.3, 1)
-    ctx.tester.runCommand("open_power_en")
-    ctx.tester.runCommand("test_model_sel")
 
-    # case 3.4.1
-    resp = ctx.tester.runCommand("test_pwrMgr")
-    time.sleep(0.1)
-    V1P5 = ctx.sourcemeter.volTest()
-    print("GP15 vol is %f mv" % V1P5)
     resp = ctx.tester.runCommand("next")
-
-    # case 3.4.2
-    input("Press ENTER to start case 3.4.2 (VCC = 3V)")
-    ctx.powersupply.voltageOutput(2, 3, 0.1, 3.3, 1)
-    V1P5 = ctx.sourcemeter.volTest()
-    vol.append(V1P5)
-    count.append(3)
-    input("Press ENTER to continue case 3.4.2 (VCC = 5.5V)")
-    ctx.powersupply.voltageOutput(2, 5.5, 0.1, 6, 1)
-    V1P5 = ctx.sourcemeter.volTest()
-    vol.append(V1P5)
-    count.append(5.5)
-    input("Press ENTER to continue case 3.4.2 (VCC = 2.2V)")
-    ctx.powersupply.voltageOutput(2, 2.2, 0.1, 3.3, 1)
-    V1P5 = ctx.sourcemeter.volTest()
-    vol.append(V1P5)
-    count.append(2.2)
-
-    for (x, y) in zip(count, vol):
-        print("VIP5 voltage is %f when VCC is %f" % (y, x))
-
-    # case 3.4.3
-    input("Press ENTER to continue case 3.4.3 (VCC vovl= 3V)")
-    ctx.powersupply.voltageOutput(2, 3, 0.1, 3.3, 1)
-    V1P5 = ctx.sourcemeter.volTest()
-    print("VIP5 voltage is %f when SLDO output vol is 1.2V " % (V1P5))
+    ctx.logger.debug(resp)
+    if resp!= 'end':
+        return False
 
     return True

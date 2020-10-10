@@ -18,6 +18,7 @@ class PowerSupply:
         self.inst.write(":OUTPut4:STATe OFF")
 
     def voltageOutput(self, channel, V, I, ovp, ocp): #open one channel
+        # print("Try set voltage to %f:%f:%f:%f" % (V ,I, ovp, ocp))
         self.inst.write(":OUTPut%d:STATe ON" % (channel))
         self.inst.write(":OUTPut%d:OCP:STATe ON" % channel)
         self.inst.write(":OUTPut%d:OVP:STATe ON" % channel)
@@ -27,6 +28,7 @@ class PowerSupply:
         self.inst.write("VSET%d:%f" % (channel, V))
 
     def resistor(self,channel,ohm, ovp, ocp):
+        self.inst.write(":OUTPut%d:STATe ON" % (channel))
         self.inst.write(":LOAD%d:CR ON " %(channel))
         self.inst.write(":LOAD%d:CV OFF " %(channel))
         self.inst.write(":LOAD%d:CC OFF " %(channel))
@@ -42,15 +44,15 @@ class PowerSupply:
         print(ohm)
 
     def measure(self,channel,IV):
+        self.inst.write(":OUTPut%d:STATe ON" % (channel))
         self.inst.write(":LOAD%d:CR ON " %(channel))
         if IV == "CURRent":
             self.inst.write(":MEASure%d:CURRent? " %channel)
             cur = self.inst.query(":IOUT%d?" %channel)
-            print(cur)
-            return cur
+            return float(cur)
         if IV == "vol":
-            vol = self.inst.query(":MEASure%d:VOLTage? " %channel)
-            return vol
+            vol = self.inst.query(":MEASure%d:VOLTage?" %channel)
+            return float(vol)
 
     def channelOn(self,channel):
         self.inst.write(":OUTPut%d:STATe ON" %channel)
@@ -63,8 +65,16 @@ class PowerSupply:
 
 if __name__ == "__main__":
     # Unit test
-    ps = PowerSupply({"port": "COM4"})
+    ps = PowerSupply({"port": "COM11"})
     ps.stopAll()
     input("Press ENTER to continue")
-    ps.voltageOutput(2, 2, 0.1, 3, 1)
-    print("PASS")
+    while True:
+        ps.voltageOutput(3, 3.3, 0.1, 5.01, 1)#voltageOutput
+        print('3.3v')
+        time.sleep(0.5)
+        ps.voltageOutput(3, 5, 0.1, 5.01, 1)#voltageOutput
+        print('5v')
+        time.sleep(0.5)
+        ps.voltageOutput(3, 2.2, 0.1, 5.01, 1)#voltageOutput
+        print('2.2v')
+        time.sleep(0.5)
