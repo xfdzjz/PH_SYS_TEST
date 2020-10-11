@@ -12,7 +12,18 @@ from lib.PowerSupply import PowerSupply
 from lib.Oscilloscope import Oscilloscope
 from lib.Tester import Tester
 from lib.NetMatrix import NetMatrix
+from lib.excel import Excel
 
+def initLogger(fileName):
+    logger = logging.getLogger('CASE')
+    logger.setLevel(logging.DEBUG)  # Log等级总开关
+    logger.addHandler(logging.StreamHandler())
+    if fileName :
+        fileHandler = logging.FileHandler(fileName)
+        fileHandler.setLevel(logging.INFO)  # 输出到file的log等级的开关
+        fileHandler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s: %(message)s"))
+        logger.addHandler(fileHandler)
+    return logger
 
 def initLogger(fileName):
     logger = logging.getLogger('CASE')
@@ -42,7 +53,7 @@ def initDevices(config):
     context.oscilloscope = Oscilloscope(config.oscilloscope)
     context.tester = Tester(config.tester)
     context.netmatrix = NetMatrix(config.netmatrix)
-    #context.excel = Excel(config.excel)
+    context.excel = Excel(config.excel)
     # 停止仪表待重新接线
     #context.sourcemeter.stopAll()
     context.powersupply.stopAll()
@@ -65,7 +76,6 @@ def execute_case(case, caseDir, context):
 
     # 执行测试用例
     context.logger.info("=====  TEST CASE %s [ %-35s ] SN=%s =====" % (case, caseModule.title, context.getChipSN()))
-    context.logger.info("chip no: %s"%context.getChipSN())
     context.logger.debug(caseModule.desc)
     input("Press ENTER to begin")
     result = caseModule.test(context)
@@ -87,7 +97,7 @@ def main():
     主程序
     '''
     # 初始化外设
-    context = initDevices(config)
+    context = initDevices(config)    
     # 获得用例列表
     mainDir = os.path.split(os.path.realpath(__file__))[0]
     availableCases = []

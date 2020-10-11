@@ -18,7 +18,11 @@ def test(ctx):
     ctx.sourcemeter.applyVoltage(3.3)
     time.sleep(0.250)
     ctx.tester.runCommand("test_model_sel")
+<<<<<<< HEAD
     ctx.tester.runCommand("open_power_en",0.2)
+=======
+    ctx.tester.runCommand("open_power_en")
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     ctx.tester.runCommand("DeepSleep")
 
     amp = ctx.sourcemeter.ampTest()
@@ -29,5 +33,14 @@ def test(ctx):
     ctx.sourcemeter.applyVoltage(2.2)
     amp = ctx.sourcemeter.ampTest()
     ctx.logger.info("I_dsleep amp is %f when VCC is 2.2v"%amp)
+<<<<<<< HEAD
+=======
+
+    resp = ctx.tester.runCommand("next")
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
+    if resp!= 'end':
+        return False
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     ctx.sourcemeter.applyVoltage(3.3)
     return True

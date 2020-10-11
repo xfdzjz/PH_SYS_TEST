@@ -18,6 +18,10 @@ def test(ctx):
     time.sleep(0.25)
     resp = ctx.tester.runCommand("TestMRCTrim")
     ctx.logger.info(resp)
+<<<<<<< HEAD
+=======
+    ctx.logger.debug(resp)
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     if resp == 'fail':
         return False
     return True

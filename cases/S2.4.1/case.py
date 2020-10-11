@@ -21,9 +21,15 @@ def test(ctx):
     ctx.powersupply.voltageOutput(4, 1.2, 0.1, 3.3, 1)# dc ps channel4 apply 1.2v to GP18
     ctx.sourcemeter.applyVoltage(gp00vol) # sourcemeter apply 1.2v to GP00
 
+<<<<<<< HEAD
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("test_cmp_hys",2)
+=======
+    #ctx.tester.runCommand("test_mode_sel")
+    ctx.tester.runCommand("open_power_en")
+    resp = ctx.tester.runCommand("test_cmp_hys")
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
 
     while resp != 'end':#check voltage of souremeter
         ctx.logger.info("GP00=%f resp: %s" % (gp00vol, resp))

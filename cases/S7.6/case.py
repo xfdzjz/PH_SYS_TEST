@@ -1,5 +1,5 @@
 import time
-title = "10V电压校准"
+title = "10V纹波、带载"
 
 desc = '''
     relay k4,k15 connect
@@ -19,49 +19,46 @@ def test(ctx):
     # 芯片上电VCC=3V
     ctx.netmatrix.arrset(['00000000','00000000','00010000','10000000'])#GP00 ->osc1 gp14->osc2
     ctx.powersupply.voltageOutput(1, 3.3, 0.1, 4, 1)
-    ctx.powersupply.resistor(2,200,13,1)
-    ctx.sourcemeter.applyVoltage(3.3)
     time.sleep(0.250)
-    ctx.tester.runCommand("test_mode_sel",0.2)
-    ctx.tester.runCommand("open_power_en",0.2)
-    ctx.oscilloscope.trig(1,"POS",0.4)
-    resp = ctx.tester.runCommand("test_dcdc_volt_10p0_volt_trim")
+    #ctx.tester.runCommand("test_mode_sel")
+    ctx.tester.runCommand("open_power_en")
+    ctx.oscilloscope.trig(1,'POS',0.4)
+    resp = ctx.tester.runCommand("test_dcdc_volt_10p0wave")
     while resp !='end':
-        if resp == "ready1":
-            ctx.sourcemeter.applyVoltage(9.5)
-            time.sleep(1)
-            vol = ctx.powersupply.measure(2, "vol")
-            if vol >  8.85 and vol < 10.4:
-                ctx.logger.info ("VH output voltage passes %f" %vol)
-                ctx.logger.debug ("VH output voltage pass %f" %vol)
-            else:
-                ctx.logger.info ("VH output voltage failed %f" %vol)
-                ctx.logger.debug ("VH output voltage fail %f" %vol)
+        if resp == "ready":
+            while ctx.oscilloscope.statusCheck() != True:
+                start = time.time()
+            ctx.oscilloscope.prepareChannel(1, 1000, 5000)
+            GP00 = ctx.oscilloscope.getWave(1, 1000, 5000)
+            ctx.oscilloscope.trig(2,'POS',0.4)
+            time.sleep(3.2)
+            while ctx.oscilloscope.statusCheck() != True:
+                end = time.time()
+            ctx.oscilloscope.prepareChannel(2, 1000, 5000)
+            GPI4 = ctx.oscilloscope.getWave(2, 1000, 5000)
+            ctx.oscilloscope.trigSlope(3,"PGReater",0.4,8)
+            time.sleep(3.2)
+            while ctx.oscilloscope.statusCheck() != True:
+                final = time.time()
+            ctx.oscilloscope.prepareChannel(3, 1000, 10000)
+            VH = ctx.oscilloscope.getWave(3, 1000, 10000)
+            ctx.logger.info("VH vol is %f"% VH[len(VH)-1])
+            ctx.logger.info ("time intv is %f" %(final-start))
+            ctx.logger.debug("VH vol is %f"% VH[len(VH)-1])
+            ctx.logger.debug("time intv is %f" %(final-start))
+
+
+            ctx.oscilloscope.prepareChannel(3, 1000, 10000)
+            VH = ctx.oscilloscope.getWave(3, 1000, 10000)
+            ctx.logger.info("VH vol is %f"% VH[len(VH)-1])
+            ctx.logger.debug("VH vol is %f"% VH[len(VH)-1])
+
+            ctx.oscilloscope.prepareChannel(3, 1000, 10000)
+            VH = ctx.oscilloscope.getWave(3, 1000, 10000)
+            ctx.logger.info("VH vol is %f"% VH[len(VH)-1])
+            ctx.logger.debug("VH vol is %f"% VH[len(VH)-1])
             resp = ctx.tester.runCommand("next")
-        elif resp == "ready2":
-            ctx.sourcemeter.applyVoltage(10.5)
-            time.sleep(1)
-            vol = ctx.powersupply.measure(2, "vol")
-            if vol >  9.5 and vol < 11.75:
-                ctx.logger.info ("VH output voltage pass %f" %vol)
-                ctx.logger.debug ("VH output voltage pass %f" %vol)
-            else:
-                ctx.logger.info ("VH output voltage fail %f" %vol)
-                ctx.logger.debug ("VH output voltage fail %f" %vol)
-            resp = ctx.tester.runCommand("next")
-        elif resp == "ready3":
-            ctx.sourcemeter.applyVoltage(11)
-            time.sleep(1)
-            vol = ctx.powersupply.measure(2, "vol")
-            if vol >  10 and vol < 12.1:
-                ctx.logger.info ("VH output voltage pass %f" %vol)
-                ctx.logger.debug ("VH output voltage pass %f" %vol)
-            else:
-                ctx.logger.info ("VH output voltage fail %f" %vol)
-                ctx.logger.debug ("VH output voltage fail %f" %vol)
-            resp = ctx.tester.runCommand("next")
-        elif resp == "ready4":
-            resp = ctx.tester.runCommand("next")
+
 
 
 

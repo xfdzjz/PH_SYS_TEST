@@ -27,8 +27,13 @@ def test(ctx):
     ctx.powersupply.voltageOutput(2, 1.5, 0.1, 3.3, 1)# v2 dc ps channel2 apply 1.5v to VC1N0/VC1N1/VC1P0-VC1P5
 
 
+<<<<<<< HEAD
     ctx.tester.runCommand("open_power_en",0.2)
     ctx.tester.runCommand("test_mode_sel",0.2)
+=======
+    ctx.tester.runCommand("open_power_en")
+    #ctx.tester.runCommand("test_mode_sel")
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     resp = ctx.tester.runCommand("test_cmp_chn")
 
     if resp != 'ready':
@@ -73,7 +78,11 @@ def test(ctx):
         ctx.netmatrix.arrset(['00000000',params[i][0],params[i][1],'00000000'])
         ctx.powersupply.voltageOutput(4, params[i][3], 0.1, 3.3, 1)#v2
         ctx.powersupply.voltageOutput(2, params[i][2], 0.1, 3.3, 1)#v1
+<<<<<<< HEAD
         resp = ctx.tester.runCommand("next",2)
+=======
+        resp = ctx.tester.runCommand("next")
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
         PassOrFail.append(resp)
 
     ctx.logger.info(PassOrFail)

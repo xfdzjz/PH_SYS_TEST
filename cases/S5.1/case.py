@@ -16,11 +16,17 @@ def test(ctx):
     ctx.netmatrix.arrset(['00000010','00000000','00000000','00000000'])#GP19->SRC case5 AIN00
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
     time.sleep(0.250)
+<<<<<<< HEAD
     input('m')
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("test_adc_chn0_samp")
 
+=======
+    #ctx.tester.runCommand("test_mode_sel")
+    ctx.tester.runCommand("open_power_en")
+    resp = ctx.tester.runCommand("test_adc_chn0_samp")
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     ctx.logger.info(resp)
     if resp == 'ready':
         ctx.sourcemeter.applyVoltage(0.5)
@@ -40,7 +46,11 @@ def test(ctx):
     ctx.netmatrix.arrset(['00100000','00000000','00000000','00000000'])#GP04->SRC case5 AIN01
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
     time.sleep(0.250)
+<<<<<<< HEAD
     ctx.tester.runCommand("open_power_en",0.2)
+=======
+    ctx.tester.runCommand("open_power_en")
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     resp = ctx.tester.runCommand("test_adc_chn2_samp")
     if resp == 'ready':
         ctx.sourcemeter.applyVoltage(0.5)

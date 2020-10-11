@@ -18,10 +18,16 @@ def test(ctx):
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
     time.sleep(0.250)
     ctx.sourcemeter.applyVoltage(0.2)
+<<<<<<< HEAD
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("thermdrvOnVoltDrop")
     print(resp)
+=======
+    #ctx.tester.runCommand("test_mode_sel")
+    ctx.tester.runCommand("open_power_en")
+    resp = ctx.tester.runCommand("thermdrvOnVoltDrop")
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     if resp == 'ready':
         amp = ctx.sourcemeter.ampTest()
         ctx.logger.info("thermdrv amp is %f when VCC is 3v"%amp)
@@ -32,8 +38,15 @@ def test(ctx):
         amp = ctx.sourcemeter.ampTest()
         ctx.logger.info("thermdrv amp is %f when VCC is 2.2v"%amp)
 
+<<<<<<< HEAD
     resp = ctx.tester.runCommand("next",2)
     ctx.logger.debug(resp)
 
+=======
+    resp = ctx.tester.runCommand("next")
+    ctx.logger.debug(resp)
+    if resp!= 'end':
+        return False
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
 
     return True

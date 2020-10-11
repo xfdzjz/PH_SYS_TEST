@@ -17,20 +17,33 @@ def test(ctx):
     ctx.netmatrix.arrset(['00000001','00000000','00000000','00000000'])#GP18->SRC case4
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
     time.sleep(0.250)
+<<<<<<< HEAD
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
+=======
+    #ctx.tester.runCommand("test_mode_sel")
+    ctx.tester.runCommand("open_power_en")
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     resp = ctx.tester.runCommand("test_adc_chn1_samp")
     if resp != 'ready':
         return False
 
     ctx.sourcemeter.applyVoltage(0.5)
     resp = ctx.tester.runCommand("next")
+<<<<<<< HEAD
 
+=======
+    ctx.logger.info(resp)
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     ctx.logger.debug(resp)
 
     ctx.sourcemeter.applyVoltage(1.5)
     resp = ctx.tester.runCommand("next")
+<<<<<<< HEAD
 
+=======
+    ctx.logger.info(resp)
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     ctx.logger.debug(resp)
 
     ctx.netmatrix.arrset(['01000000','00000000','00000000','00000000'])#GP06->SRC case4
@@ -39,12 +52,20 @@ def test(ctx):
         return False
     ctx.sourcemeter.applyVoltage(0.5)
     resp = ctx.tester.runCommand("next")
+<<<<<<< HEAD
 
+=======
+    ctx.logger.info(resp)
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     ctx.logger.debug(resp)
 
     ctx.sourcemeter.applyVoltage(1.5)
     resp = ctx.tester.runCommand("next")
+<<<<<<< HEAD
 
+=======
+    ctx.logger.info(resp)
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     ctx.logger.debug(resp)
     if resp!= 'end':
         return False
@@ -55,11 +76,19 @@ def test(ctx):
         return False
     ctx.sourcemeter.applyVoltage(0.5)
     resp = ctx.tester.runCommand("next")
+<<<<<<< HEAD
 
     ctx.logger.debug(resp)
     ctx.sourcemeter.applyVoltage(1.5)
     resp = ctx.tester.runCommand("next")
 
+=======
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
+    ctx.sourcemeter.applyVoltage(1.5)
+    resp = ctx.tester.runCommand("next")
+    ctx.logger.info(resp)
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     ctx.logger.debug(resp)
     if resp!= 'end':
         return False
@@ -70,11 +99,19 @@ def test(ctx):
         return False
     ctx.sourcemeter.applyVoltage(0.5)
     resp = ctx.tester.runCommand("next")
+<<<<<<< HEAD
 
     ctx.logger.debug(resp)
     ctx.sourcemeter.applyVoltage(1.5)
     resp = ctx.tester.runCommand("next")
 
+=======
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
+    ctx.sourcemeter.applyVoltage(1.5)
+    resp = ctx.tester.runCommand("next")
+    ctx.logger.info(resp)
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     ctx.logger.debug(resp)
     if resp!= 'end':
         return False
@@ -85,6 +122,7 @@ def test(ctx):
         return False
     ctx.sourcemeter.applyVoltage(0.5)
     resp = ctx.tester.runCommand("next")
+<<<<<<< HEAD
 
     ctx.logger.debug(resp)
     ctx.sourcemeter.applyVoltage(1.5)
@@ -95,4 +133,15 @@ def test(ctx):
         ctx.logger.info("case 4.2.1 fail")
         return False
     ctx.logger.info("case 4.2.1 pass")
+=======
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
+    ctx.sourcemeter.applyVoltage(1.5)
+    resp = ctx.tester.runCommand("next")
+    ctx.logger.info(resp)
+    ctx.logger.debug(resp)
+    if resp!= 'end':
+        return False
+
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     return True

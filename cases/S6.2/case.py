@@ -17,6 +17,7 @@ def test(ctx):
     vol = 3
 
     # 芯片上电VCC=3V
+<<<<<<< HEAD:cases/S6.2/case.py
 
     ctx.netmatrix.arrset(['00000000','00000000','00010000','00000000'])
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5.5, 1)#vCC
@@ -26,6 +27,17 @@ def test(ctx):
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("test_dcdc_vok")
 
+=======
+
+    ctx.netmatrix.arrset(['00000000','00000000','00010000','00000000'])
+    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 7, 1)#vCC
+    time.sleep(0.250)
+    ctx.powersupply.voltageOutput(2, 3, 0.1, 7, 1)#vh
+    #ctx.tester.runCommand("test_mode_sel")
+    ctx.tester.runCommand("open_power_en")
+    resp = ctx.tester.runCommand("test_dcdc_vok")
+
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6:cases/S6.2.10/case.py
     ctx.oscilloscope.staReco()
 
     while resp != 'end':
@@ -41,7 +53,11 @@ def test(ctx):
             ctx.powersupply.voltageOutput(2, vol/1000 , 0.1, 7, 1)
             resp = ctx.tester.runCommand("next")
         elif resp[:3] == "vok":
+<<<<<<< HEAD:cases/S6.2/case.py
             ctx.logger.info(resp[:4] + "vol is %sv" %resp[-5:-2])
+=======
+            ctx.logger.info(resp[:4] + "voltage is %sv" %resp[-5:-2])
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6:cases/S6.2.10/case.py
             vol = float(resp[-5:-2])
             resp = ctx.tester.runCommand("next")
         elif resp[-2:] == 'mv':

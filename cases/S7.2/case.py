@@ -1,6 +1,10 @@
 import time
+<<<<<<< HEAD
 import numpy as np
 title = "5V电压校准"
+=======
+title = "4.5V带载"
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
 
 desc = '''
     relay k4,k15 connect
@@ -15,13 +19,17 @@ def test(ctx):
     ctx.multimeter  使用
         '''
 
+<<<<<<< HEAD
     vol = 3
+=======
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
 
     # 芯片上电VCC=3V
 
     ctx.netmatrix.arrset(['00000000','00000000','00010000','10000000'])#GP00 ->osc1 gp14->osc2
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 4, 1)
     time.sleep(0.250)
+<<<<<<< HEAD
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     ctx.oscilloscope.trig(1,"POS",0.4)
@@ -101,6 +109,25 @@ def test(ctx):
             ctx.logger.info("VPP is %fv" %VPPVH)
 
             ctx.powersupply.channelOff(1)
+=======
+    ctx.powersupply.channelOn(1)
+    ctx.powersupply.channelOn(2)
+    ctx.powersupply.voltageOutput(1, 4.5, 0.1, 4, 1)
+    ctx.tester.runCommand("test_mode_sel",0.2)
+    ctx.tester.runCommand("open_power_en",0.2)
+    resp = ctx.tester.runCommand("test_dcdc_volt_4p5ipk")
+    ctx.sourcemeter.applyCurrent(0.01)
+    while resp !='end':
+        if resp == "ready":
+            ctx.powersupply.channelOn(1)
+            curr = ctx.powersupply.measure(1,"CURRent")
+            ctx.logger.info("current is %s ampere" %curr)
+            ctx.logger.debug("current is %s ampere" %curr)
+            resp = ctx.tester.runCommand("next")
+        else:
+            return False
+
+>>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
 
 
     return True
