@@ -21,7 +21,6 @@ def test(ctx):
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 4, 1)
     time.sleep(0.250)
     ctx.powersupply.voltageOutput(4, vol, 0.1, 10, 1)
-<<<<<<< HEAD
     ctx.powersupply.voltageOutput(2, 0, 0.1, 10, 1)
     ctx.oscilloscope.trigMul(2,'POS',1.8, scale = 0.5)
     time.sleep(3)
@@ -34,19 +33,6 @@ def test(ctx):
         ctx.logger.info(resp)
         ctx.logger.debug(resp)
 
-=======
-    ctx.oscilloscope.trigMul(2,'POS',0.7, scale = 0.01)
-
-
-    #ctx.tester.runCommand("test_mode_sel")
-    ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("test_dcdc_ipk")
-    time.sleep(3)
-
-    while resp != 'end':
-        ctx.logger.info(resp)
-        ctx.logger.debug(resp)
->>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
         if resp == '100mv+':
             vol = vol + 100
             ctx.powersupply.voltageOutput(4, vol/1000, 0.1, 10, 1)
@@ -54,7 +40,6 @@ def test(ctx):
         elif resp[:2] == "VH":
             ctx.logger.info(resp[:3] + "voltage is %smv" %resp[-4:])
             vol = float(resp[-4:])
-<<<<<<< HEAD
             #-----test-----
             ctx.powersupply.voltageOutput(2, 0, 0.1, 10, 1)
             time.sleep(0.1)
@@ -74,19 +59,6 @@ def test(ctx):
             else:
                 ctx.logger.info("V1 test fail")
                 input("n")
-=======
-            if ctx.oscilloscope.statusCheck() ==True:
-                vol1 = ctx.oscilloscope.readRamData(1,2,1,15625,'True')
-                vol2 = ctx.oscilloscope.readRamData(2,2,1,15625,'True')
-                for i in range (0, len(vol2)):
-                    if float(vol2[i]) >=1.2:
-                        lx_vol = float(vol1[i])
-                    else:
-                        ctx.logger.info("GP14 test fail")
-                        return False
-            else:
-                ctx.logger.info("V1 test fail")
->>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
                 return False
 
             Ipk = (vol/1000 -lx_vol)/3

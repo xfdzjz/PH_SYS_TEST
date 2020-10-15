@@ -21,13 +21,11 @@ def test(ctx):
     ctx.netmatrix.arrset(['00000001','00000000','00001000','00000000'])#GP15->osc PDA->src
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
     time.sleep(0.250)
-<<<<<<< HEAD
+    ctx.oscilloscope.trig(3,"POS",1.5,0.001,1)
+    time.sleep(0.5)
+    resp = 'ready'
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
-=======
-    ctx.tester.runCommand("test_mode_sel")
-    ctx.tester.runCommand("open_power_en")
->>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     resp = ctx.tester.runCommand("test_pd_sensor_out_gain")
 
     while resp != 'end':
@@ -50,13 +48,10 @@ def test(ctx):
             if counter == 32:
                 ctx.powersupply.voltageOutput(3, 5, 0.1, 6, 1) # FIXME: check
             if counter == 33:
-<<<<<<< HEAD
                 ctx.powersupply.voltageOutput(3, 2.2, 0.1, 6, 1) # FIXME: check
             if counter == 34:
                 ctx.powersupply.voltageOutput(3, 5, 0.1, 5, 1) # FIXME: check
             if counter == 35:
-=======
->>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
                 ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1) # FIXME: check
         else:
             return False

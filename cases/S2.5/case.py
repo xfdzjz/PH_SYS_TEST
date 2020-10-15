@@ -18,54 +18,56 @@ def test(ctx):
     ctx.netmatrix.arrset(['00000000','01000000','00000000','00000000'])#GP04->vref
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
     time.sleep(0.250)
-<<<<<<< HEAD
+    count = 0
+    channel = 3
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("test_lvd_volt")
     ctx.powersupply.voltageOutput(3, float(resp[:-2])/1000, 0.1, 5, 1)
     vol = float(resp[:-2])
     while resp!= 'end':
-=======
-    #ctx.tester.runCommand("test_mode_sel")
-    ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("test_lvd_volt")
-    ctx.logger.info(resp)
-    ctx.powersupply.voltageOutput(3, float(resp[:-2]), 0.1, 5, 1)
-    vol = float(resp[:-2])
-    while resp!= 'end':
-
->>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
         ctx.logger.info(resp)
         if resp == 'ready':
             resp = ctx.tester.runCommand("next")
+            time.sleep(0.5)
         if resp =="10mv+":
             vol = vol +0.01
             ctx.logger.info(vol)
-            ctx.powersupply.voltageOutput(3, vol, 0.1, 5, 1)
+            ctx.powersupply.voltageOutput(channel, vol, 0.1, 5, 1)
+            time.sleep(0.5)
             resp = ctx.tester.runCommand("next")
         elif resp =="10mv-":
             vol = vol-0.01
             ctx.logger.info(vol)
-            ctx.powersupply.voltageOutput(3, vol, 0.1, 5, 1)
+            ctx.powersupply.voltageOutput(channel, vol, 0.1, 5, 1)
+            time.sleep(0.5)
             resp = ctx.tester.runCommand("next")
         elif resp =="1mv-":
             vol = vol -0.001
             ctx.logger.info(vol)
-            ctx.powersupply.voltageOutput(3, vol, 0.1, 5, 1)
+            ctx.powersupply.voltageOutput(channel, vol, 0.1, 5, 1)
+            time.sleep(0.5)
             resp = ctx.tester.runCommand("next")
         elif resp[-2:] == "mv" and resp[:6]!= "result" :
             ctx.logger.info ("Right now is " + resp)
+            count = count+1
             vol = float(resp[:-2])/1000
-<<<<<<< HEAD
             if vol >=2.8:
                 ctx.powersupply.voltageOutput(3, 5, 0.1, 5.1, 1)
-=======
->>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
+                time.sleep(0.5)
             ctx.logger.info(vol)
-            ctx.powersupply.voltageOutput(3, vol, 0.1, 5, 1)
+            ctx.powersupply.voltageOutput(channel, vol, 0.1, 5, 1)
+            time.sleep(0.5)
             resp = ctx.tester.runCommand("next")
         elif resp[:6]== "result":
             ctx.logger.info( "final result is %s" %resp[7:])
+            input('n')
+            if count == 2:
+                ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
+                channel = 4
+            if count == 3:
+                ctx.netmatrix.arrset(['00000000','00100000','00000000','00000000'])
+
             resp = ctx.tester.runCommand("next")
         else :
             return False
