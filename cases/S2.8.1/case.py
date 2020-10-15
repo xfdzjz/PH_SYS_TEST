@@ -44,7 +44,6 @@ def test(ctx):
 
     # 芯片上电VCC=3V
     #ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
-<<<<<<< HEAD
     #ctx.netmatrix.arrset(['01000000','00010000','00000000','00000000'])#GP04->src GP14->vref
     ctx.powersupply.voltageOutput(3, 2.3, 0.1, 5.6, 1)
     time.sleep(0.250)
@@ -54,15 +53,6 @@ def test(ctx):
     count = 0
     k=0
     b=b+1
-=======
-    ctx.netmatrix.arrset(['01000000','00010000','00000000','00000000'])#GP04->src GP14->vref
-    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
-    time.sleep(0.250)
-    #ctx.tester.runCommand("test_mode_sel")
-    ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("test_adc_freq")
-    count = 0
->>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
 
     while resp !="end":
         ctx.logger.info(resp)
@@ -71,7 +61,6 @@ def test(ctx):
             resp = ctx.tester.runCommand("next")
         if resp[-2:] == 'mv':
             vol = float(resp[:-2])
-<<<<<<< HEAD
             step = (vol-100) / 4095 /1000
         #ctx.sourcemeter.applyVoltage(((1.34-23*0.000654)*1.5))
         for count in range(-1,4096):#-1->4096
@@ -150,26 +139,4 @@ def test(ctx):
             resp = ctx.tester.runCommand("n")
 
     print('pass')
-=======
-            step = vol / 4096
-        for count in (0,4096):
-            ctx.sourcemeter.applyVoltage(count*step)
-            resp = ctx.tester.runCommand("n")
-            ctx.logger.info(resp)
-            ad_vol.append(resp)
-            counter.append(count)
-        for count in (4096,0):
-            ctx.sourcemeter.applyVoltage(count*step)
-            count = count -1
-            resp = ctx.tester.runCommand("n")
-            ctx.logger.info(resp)
-            ad_vol.append(resp)
-            counter.append(count)
-        count = count + 1
-        resp = ctx.tester.runCommand("n")
-        if count == 1 :
-            ctx.powersupply.voltageOutput(3, 5.0, 0.1, 6, 1)
-        if count == 2 :
-            ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)
->>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
     return True

@@ -21,30 +21,43 @@ def test(ctx):
     ctx.netmatrix.arrset(['00000001','00000000','00001000','00000000'])#GP15->osc PDA->src
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
     time.sleep(0.250)
-    ctx.oscilloscope.trig(3,"POS",1.5,0.001,1)
+    ctx.oscilloscope.trig(3,"NEG",1.5,0.001,1)
+    ctx.sourcemeter.loadScript()
     time.sleep(0.5)
     resp = 'ready'
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
+    ctx.sourcemeter.runCommand('TSB_Script.run()')
+    time.sleep(1)
     resp = ctx.tester.runCommand("test_pd_sensor_out_gain")
+    time.sleep(1)
+    wave = ctx.oscilloscope.readRamData(2,2,1,15625,'true')
 
     while resp != 'end':
-        ctx.logger.info(resp)
-        ctx.logger.debug(resp)
         if resp == 'ready':
-            ctx.oscilloscope.prepareChannel(2, 1000, 300)
-            time.sleep(2)
-            ctx.sourcemeter.pulseAmp(0,2e-6,70e-6)
-            wave = ctx.oscilloscope.getWave(2, 1000, 300)
+
+            # print(wave)
+            if len(wave) ==1:
+                ctx.logger.info('no wave')
+                return False
             for i in range(0,len(wave)):
                 wave[i] = float(wave[i])
+                if wave[i] >2:
+                    wave[i] =0
+
             wave_max = max(wave)
             counter = counter + 1
             ctx.logger.info("wave_max is %f" %wave_max)
             waveMax.append(wave_max)
             count.append(counter)
-            ctx.logger.info(counter)
-            resp = ctx.tester.runCommand("next")
+            ctx.oscilloscope.trig(3,"NEG",1.5,0.01,2)
+            time.sleep(1)
+            ctx.sourcemeter.runCommand('TSB_Script.run()')
+            time.sleep(1)
+            resp= ctx.tester.runCommand("next")
+            #input('n')
+            time.sleep(1)
+            wave = ctx.oscilloscope.readRamData(2,2,1,15625,'true')
             if counter == 32:
                 ctx.powersupply.voltageOutput(3, 5, 0.1, 6, 1) # FIXME: check
             if counter == 33:

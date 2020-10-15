@@ -18,20 +18,26 @@ def test(ctx):
     time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
-    resp = ctx.tester.runCommand("test_volt_ref")
+    resp = ctx.tester.runCommand("test_volt_ref",3)
     a =[2500,2000,1500,1200]
     i = 0
+
+
     with open('temp.txt','w') as f:
         while resp !='end':
             ctx.logger.info(resp)
             ctx.logger.debug(resp)
             if resp[0:5] == 'ready':
+                time.sleep(1)
                 avg = ctx.sourcemeter.volTest()
                 ctx.logger.info("VCC is 3.3v avg is %s" %(avg))
                 ctx.powersupply.voltageOutput(3, 5, 0.1, 6, 1)
+                time.sleep(1)
+
                 avg1 = ctx.sourcemeter.volTest()
                 ctx.logger.info("VCC is 5v avg is %s" %(avg1))
                 ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)
+                time.sleep(1)
                 avg2 = ctx.sourcemeter.volTest()
                 ctx.logger.info("VCC is 2.2v avg is %s" %(avg2))
                 ctx.powersupply.voltageOutput(3, 3.3, 0.1, 6, 1)

@@ -53,10 +53,13 @@ class Oscilloscope:
         self.inst.write(":STOP")
         pass
 
+    def timeset(self,scale= 0.01):
+        self.inst.write(":TIMebase:MAIN:SCALe %f" %scale)
+
     def runsta(self):
         self.inst.write(":RUN ")
 
-    def trig(self, channel,triSlope,triVol,scale= 0.001,vscale = 1):#set trigger model
+    def trig(self, channel,triSlope,triVol,scale= 0.01,vscale = 1):#set trigger model
         self.inst.write(":SINGle")
         self.inst.write(":TRIGger:MODE EDGe")
         self.inst.write(":TRIGger:EDGe:SOURce CHANnel%d" %channel)
@@ -66,7 +69,7 @@ class Oscilloscope:
         self.inst.write(":CHANnel%d:SCALe %f "%(channel,vscale))
 
 
-    def trigMul(self, channel,triSlope,triVol,scale =  0.001,vscale = 1):#set trigger model
+    def trigMul(self, channel,triSlope,triVol,scale =  0.01,vscale = 1):#set trigger model
         self.inst.write(":RUN")
         self.inst.write(":TRIGger:MODE EDGe")
         self.inst.write(":TRIGger:EDGe:SOURce CHANnel%d" %channel)
@@ -217,8 +220,6 @@ class Oscilloscope:
         para.append(float(frequency))
         return para
 
-    def xincre(self):
-        return self.inst.query (":WAVeform:XINCrement? ")
 
 
     def getVoltage(self, channel):

@@ -18,14 +18,17 @@ def test(ctx):
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
     time.sleep(0.250)
     ctx.powersupply.voltageOutput(2, 10.5, 0.1, 11, 1)#vh
+    ctx.oscilloscope.trigMul(2,"POS",0.5,0.01,2)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("bzPwmMode",2)
+    ctx.oscilloscope.timeset(0.02)
     if resp == 'ready':
-        time.sleep(2)
-        input('n')
+        time.sleep(1)
         para1=ctx.oscilloscope.paraTest(1)
+        time.sleep(1)
         para2=ctx.oscilloscope.paraTest(2)
+        time.sleep(1)
         if para1[0] == 0.25 and para1[1] == 0.5:
             ctx.logger.info("channel1 pass")
         else:

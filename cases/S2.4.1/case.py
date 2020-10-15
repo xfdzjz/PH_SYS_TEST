@@ -27,7 +27,6 @@ def test(ctx):
 
     while resp != 'end':#check voltage of souremeter
         ctx.logger.info("GP00=%f resp: %s" % (gp00vol, resp))
-        ctx.logger.debug("GP00=%f resp: %s" % (gp00vol, resp))
         if resp == 'ready':
             ctx.logger.info(resp)
         elif resp == '1mv+':

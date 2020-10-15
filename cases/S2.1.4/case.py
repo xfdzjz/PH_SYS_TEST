@@ -19,6 +19,7 @@ def test(ctx):
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("LRCTestOnVCCVerify",2)
+    ctx.oscilloscope.timeset(0.00005)#示波器x轴一格多宽
 
     while resp !='end':
         ctx.logger.info(resp)
@@ -41,7 +42,6 @@ def test(ctx):
             ctx.logger.info("VCC is 5v fre is %f, duty is %f" %(fre,duty))
         else:
             print("Fail")
-            input("n")
             return False
         resp = ctx.tester.runCommand("next",3)
 

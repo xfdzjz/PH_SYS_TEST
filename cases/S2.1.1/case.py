@@ -21,14 +21,14 @@ def test(ctx):
     time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
-    resp = ctx.tester.runCommand("VBGSTestOnVCCVerify",1)
+    resp = ctx.tester.runCommand("VBGSTestOnVCCVerify",2)
+    time.sleep(1)
 
     vol = []
     vcc = [3.3,5,2.2]
 
     while resp !='end':
         ctx.logger.info(resp)
-        input('n')
         if resp == 'ready':
             vol.append(ctx.sourcemeter.volTest())
             ctx.logger.info("VCC is 3.3v vol is %f" %vol[0])

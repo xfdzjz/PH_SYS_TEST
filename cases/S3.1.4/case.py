@@ -19,9 +19,9 @@ def test(ctx):
     time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
-    ctx.tester.runCommand("bvsMaxCur")
+    ctx.tester.runCommand("bvsMaxCur",3)
 
-    amp = ctx.sourcemeter.ampTest()
+    amp = ctx.sourcemeter.ampTest()g
     ctx.logger.info("I_BVS amp is %f when VCC is 3.3v"%amp)
 
 

@@ -18,12 +18,17 @@ def test(ctx):
         ['00000000', '00000000', '00010000', '00000000'])  # GP14->OSC
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
     time.sleep(0.50)
+    count = 0
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("HRCTestOnVCCVerify", 3)
+    ctx.oscilloscope.timeset(0.000001)#示波器x轴一格多宽
 
     while resp != 'end':
         if resp[0:3] == 'hrc':
+            # if count == 3:
+            #     ctx.oscilloscope.timeset(0.000001)
+            count = count +1
             para = ctx.oscilloscope.paraTest(2)
             fre = para[1]
             duty = para[0]

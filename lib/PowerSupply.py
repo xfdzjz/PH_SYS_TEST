@@ -49,6 +49,8 @@ class PowerSupply:
         if IV == "CURRent":
             self.inst.write(":MEASure%d:CURRent? " %channel)
             cur = self.inst.query(":IOUT%d?" %channel)
+            cur = cur[:-2]
+            print(cur)
             return float(cur)
         if IV == "vol":
             vol = self.inst.query(":MEASure%d:VOLTage?" %channel)

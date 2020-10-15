@@ -19,7 +19,7 @@ def test(ctx):
     time.sleep(0.250)
     ctx.tester.runCommand("test_model_sel")
     ctx.tester.runCommand("open_power_en",0.2)
-    ctx.tester.runCommand("DeepSleep")
+    ctx.tester.runCommand("DeepSleep",3)
 
     amp = ctx.sourcemeter.ampTest()
     ctx.logger.info("I_dsleep amp is %f when VCC is 3v"%amp)

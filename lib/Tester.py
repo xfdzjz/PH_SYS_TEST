@@ -3,6 +3,7 @@ from time import sleep
 
 class Tester:
     def __init__(self, config):
+
         self.port = serial.Serial(config["port"], config["baudRate"],timeout=2,inter_byte_timeout=0.2)
         # self.port = serial.Serial(config["port"], config["baudRate"],timeout=2)
 
@@ -16,6 +17,9 @@ class Tester:
         pass
 
     def runCommand(self, cmd, timeout=None):# communication using serial port and how much string number will be read
+
+        self.port.close()
+        self.port.open()
         self.port.flushInput()
         print("RUNCMD: %s" % cmd)
         buffer = (cmd + " ").encode('ascii')
@@ -31,6 +35,10 @@ class Tester:
         val = readVal.decode("ascii")
         print("RESP: %s(%d)" % (val, len(val)) )
         return val
+    def runC(self, cmd, timeout=None):# communication using serial port and how much string number will be read
+
+        buffer = (cmd + " ").encode('ascii')
+        self.port.write(buffer) # command ending char " "
 
     def readsn(self):
         self.port.write(("ReadSN"+' ').encode('ascii'))

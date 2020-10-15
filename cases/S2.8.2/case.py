@@ -37,13 +37,12 @@ def test(ctx):
     # 芯片上电VCC=3V
     ctx.netmatrix.arrset(['01000000','00010000','00000000','00000000'])#GP04->src GP14->vref
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
-<<<<<<< HEAD
 
     time.sleep(0.250)
     b=b+1
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
-    resp = ctx.tester.runCommand("test_adc_int_vref")
+    resp = ctx.tester.runCommand("test_adc_int_vref",3)
     count = 0
     k=0
     with open('temp.txt') as f:
@@ -56,13 +55,6 @@ def test(ctx):
                 chip=search.groups(0)
                 vref.append(float(chip[0]))
                 vrvol.append(float(chip[2]))
-=======
-    time.sleep(0.250)
-    #ctx.tester.runCommand("test_mode_sel")
-    ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("test_adc_int_vref")
-    count = 0
->>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
 
     while resp !="end":
         ctx.logger.info(resp)
@@ -71,7 +63,6 @@ def test(ctx):
             resp = ctx.tester.runCommand("next")
         if resp[-2:] == 'mv':
             vol = float(resp[:-2])
-<<<<<<< HEAD
             step = (vol-100) / 4096
 
 
@@ -127,26 +118,6 @@ def test(ctx):
         b=b+1
 
 
-=======
-            step = vol / 4096
-        for count in (0,4096):
-            ctx.sourcemeter.applyVoltage(count*step)
-            resp = ctx.tester.runCommand("n")
-            ctx.logger.info(resp)
-            ad_vol.append(resp)
-            counter.append(count)
-        for count in (4096,0):
-            ctx.sourcemeter.applyVoltage(count*step)
-            count = count -1
-            resp = ctx.tester.runCommand("n")
-            ctx.logger.info(resp)
-            ad_vol.append(resp)
-            counter.append(count)
-        resp = ctx.tester.runCommand("n")
-
-    for (x,y) in (ad_vol,counter):
-        ctx.logger.info("case %d voltage is %f"%(y,x))
->>>>>>> 7146e1e0af3dc1479c688f0e0bdd636a80c8a0c6
 
 
     print('pass')
