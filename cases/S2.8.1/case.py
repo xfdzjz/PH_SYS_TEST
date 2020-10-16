@@ -46,7 +46,6 @@ def test(ctx):
     #ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
     #ctx.netmatrix.arrset(['01000000','00010000','00000000','00000000'])#GP04->src GP14->vref
     ctx.powersupply.voltageOutput(3, 2.3, 0.1, 5.6, 1)
-    time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("test_adc_freq")

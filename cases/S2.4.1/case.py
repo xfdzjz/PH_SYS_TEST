@@ -16,7 +16,6 @@ def test(ctx):
     # 芯片上电VCC=3V
     ctx.netmatrix.arrset(['10000000','00000100','00000000','00000000'])#GP00->src GP18->vref
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    time.sleep(0.250)
     gp00vol = 1.2
     ctx.powersupply.voltageOutput(4, 1.2, 0.1, 3.3, 1)# dc ps channel4 apply 1.2v to GP18
     ctx.sourcemeter.applyVoltage(gp00vol) # sourcemeter apply 1.2v to GP00

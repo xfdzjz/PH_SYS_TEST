@@ -20,7 +20,6 @@ def test(ctx):
     # 芯片上电VCC=3V
     ctx.netmatrix.arrset(['00000001','00000000','00001000','00000000'])#GP15->osc PDA->src
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
-    time.sleep(0.250)
     ctx.oscilloscope.trig(3,"NEG",1.5,0.001,1)
     ctx.sourcemeter.loadScript()
     time.sleep(0.5)
@@ -55,7 +54,6 @@ def test(ctx):
             ctx.sourcemeter.runCommand('TSB_Script.run()')
             time.sleep(1)
             resp= ctx.tester.runCommand("next")
-            #input('n')
             time.sleep(1)
             wave = ctx.oscilloscope.readRamData(2,2,1,15625,'true')
             if counter == 32:

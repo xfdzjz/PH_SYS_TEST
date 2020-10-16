@@ -17,7 +17,6 @@ def test(ctx):
     # 芯片上电VCC=3V
     ctx.netmatrix.arrset(['00000000','01000000','00000000','00000000'])#GP04->vref
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
-    time.sleep(0.250)
     count = 0
     channel = 3
     ctx.tester.runCommand("test_mode_sel",0.2)
@@ -34,19 +33,16 @@ def test(ctx):
             vol = vol +0.01
             ctx.logger.info(vol)
             ctx.powersupply.voltageOutput(channel, vol, 0.1, 5, 1)
-            time.sleep(0.5)
             resp = ctx.tester.runCommand("next")
         elif resp =="10mv-":
             vol = vol-0.01
             ctx.logger.info(vol)
             ctx.powersupply.voltageOutput(channel, vol, 0.1, 5, 1)
-            time.sleep(0.5)
             resp = ctx.tester.runCommand("next")
         elif resp =="1mv-":
             vol = vol -0.001
             ctx.logger.info(vol)
             ctx.powersupply.voltageOutput(channel, vol, 0.1, 5, 1)
-            time.sleep(0.5)
             resp = ctx.tester.runCommand("next")
         elif resp[-2:] == "mv" and resp[:6]!= "result" :
             ctx.logger.info ("Right now is " + resp)
@@ -54,10 +50,8 @@ def test(ctx):
             vol = float(resp[:-2])/1000
             if vol >=2.8:
                 ctx.powersupply.voltageOutput(3, 5, 0.1, 5.1, 1)
-                time.sleep(0.5)
             ctx.logger.info(vol)
             ctx.powersupply.voltageOutput(channel, vol, 0.1, 5, 1)
-            time.sleep(0.5)
             resp = ctx.tester.runCommand("next")
         elif resp[:6]== "result":
             ctx.logger.info( "final result is %s" %resp[7:])

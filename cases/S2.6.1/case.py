@@ -16,13 +16,11 @@ def test(ctx):
     ctx.netmatrix.arrset(['10000000','00000000','00000000','00000000'])#GP15->src
 
     ctx.powersupply.voltageOutput(3, 3.3, 0.5, 5.1, 1)
-    time.sleep(0.250)
     ctx.sourcemeter.applyVoltage(3.3-0.5)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("indLedOnVoltDrop",3)
     ctx.logger.info(resp)
-    ctx.logger.debug(resp)
     if resp == 'ready':
         amp = ctx.sourcemeter.ampTest()
         input('n')

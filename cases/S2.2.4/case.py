@@ -15,7 +15,6 @@ def test(ctx):
     # 芯片上电VCC=3V, Channel=1
     ctx.netmatrix.arrset(['00001000','00000000','00000000','00000000'])#GP15->src
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    time.sleep(0.500)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("V1P5DTest",3)
@@ -24,7 +23,6 @@ def test(ctx):
 
     while resp !='end':
         ctx.logger.info(resp)
-        ctx.logger.debug(resp)
         if resp == 'ready':
             if counter== 0:
                 ctx.logger.info("V1P5D 1.5V")

@@ -85,8 +85,10 @@ class SourceMeter:
             self.runCommand('smua.source.levelv = %f' %vol)
             self.runCommand('smua.source.output = smua.OUTPUT_ON')
             self.runCommand('smua.source.limiti = 0.2')
+            time.sleep(0.3) # 等待 300ms 电压正常输出
         else:
             raise SystemError
+
 
     def applyVol(self,vol):
         if vol <=10.1 and vol >=-1:

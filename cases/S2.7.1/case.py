@@ -19,7 +19,6 @@ def test(ctx):
     # 芯片上电VCC=3V
     ctx.netmatrix.arrset(['00000001','00000000','00001000','00000000'])#GP15->osc PDA->src
     ctx.powersupply.voltageOutput(3, 3.3, 1, 5, 1)
-    time.sleep(0.250)
 
     ctx.oscilloscope.trig(3,"NEG",1.5,0.01,2)
     time.sleep(0.5)
@@ -33,8 +32,6 @@ def test(ctx):
     time.sleep(1)
 
     wave = ctx.oscilloscope.readRamData(2,2,1,15625,'true')
-    input('n')
-    #ctx.oscilloscope.trigSlope(2,"PGReater",0.0001,1,0.001,5)#(self, channel, PGReater,time,triVol,scale = 0.5,vscale=1)
 
     while resp != 'end':
         if resp == 'ready':
@@ -58,7 +55,6 @@ def test(ctx):
             ctx.sourcemeter.runCommand('TSB_Script.run()')
             time.sleep(1)
             resp= ctx.tester.runCommand("next")
-            input('N')
             time.sleep(1)
             wave = ctx.oscilloscope.readRamData(2,2,1,15625,'true')
 

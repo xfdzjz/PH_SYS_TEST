@@ -15,7 +15,6 @@ def test(ctx):
     # 芯片上电VCC=3V, Channel=1
     ctx.netmatrix.arrset(['00001000','00000000','00000000','00000000'])#GP15->src
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    time.sleep(0.500)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("V1P5STest",3)
@@ -24,7 +23,6 @@ def test(ctx):
 
     while resp !='end':
         ctx.logger.info(resp)
-        ctx.logger.debug(resp)
         if resp == 'ready':
             if counter == 0:
                 ctx.logger.info("V1P5S 1.5V")
@@ -33,15 +31,12 @@ def test(ctx):
             vol = ctx.sourcemeter.volTest()
             ctx.logger.info("VCC is 3.3v vol is %f" %vol)
             ctx.powersupply.voltageOutput(3, 5, 0.1, 6, 1)
-            time.sleep(0.500)
             vol = ctx.sourcemeter.volTest()
             ctx.logger.info("VCC is 5v vol is %f" %vol)
-            ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)#voltageOutput(self, channel, V, I, ovp, ocp)
-            time.sleep(0.500)
+            ctx.powersupply.voltageOutput(3, 2.2, 0.1, 6, 1)#voltageOutput(self, channel, V, I, ovp, ocp)
             vol = ctx.sourcemeter.volTest()
             ctx.logger.info("VCC is 2.2v vol is %f" %vol)
-            ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
-            time.sleep(0.500)
+            ctx.powersupply.voltageOutput(3, 3.3, 0.1, 6, 1)
             resp = ctx.tester.runCommand("next",2)
             counter = counter +1
         else:

@@ -15,12 +15,10 @@ def test(ctx):
     # 芯片上电VCC=3V, Channel=1
     ctx.netmatrix.arrset(['00001000','00000000','00000000','00000000'])#GP15->OSC
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
-    time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("ISRCA5uA")
     ctx.logger.info(resp)
-    ctx.logger.debug(resp)
     if resp == 'ready':
         vol = ctx.sourcemeter.volTest()
         ctx.logger.info("Visrca vol is %f"%vol)
