@@ -3,9 +3,8 @@ from time import sleep
 
 class Tester:
     def __init__(self, config):
-
         self.port = serial.Serial(config["port"], config["baudRate"],timeout=2,inter_byte_timeout=0.2)
-        # self.port = serial.Serial(config["port"], config["baudRate"],timeout=2)
+        self.SN = ""
 
     def __del__(self):
         try:
@@ -16,7 +15,12 @@ class Tester:
     def stopAll(self):
         pass
 
-    def runCommand(self, cmd, timeout=None):# communication using serial port and how much string number will be read
+    def runCommand(self, cmd, timeout=None):
+        # 读SN小把戏
+        if cmd == 'test_mode_sel':
+            self.SN = self.runCommand("cReadSN",0.2)
+        elif cmd == 'EnterEstMode':
+            self.SN = self.runCommand("ReadSN",0.2)
 
         self.port.close()
         self.port.open()
@@ -35,13 +39,14 @@ class Tester:
         val = readVal.decode("ascii")
         print("RESP: %s(%d)" % (val, len(val)) )
         return val
+
     def runC(self, cmd, timeout=None):# communication using serial port and how much string number will be read
 
         buffer = (cmd + " ").encode('ascii')
         self.port.write(buffer) # command ending char " "
 
     def readsn(self):
-        self.port.write(("ReadSN"+' ').encode('ascii'))
+        self.port.write(("cReadSN ").encode('ascii'))
         sleep(0.2)
         readVal = self.port.read_all()
         val = readVal.decode("ascii")
