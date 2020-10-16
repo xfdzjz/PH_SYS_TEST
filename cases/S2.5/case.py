@@ -55,7 +55,6 @@ def test(ctx):
             resp = ctx.tester.runCommand("next")
         elif resp[:6]== "result":
             ctx.logger.info( "final result is %s" %resp[7:])
-            input('n')
             if count == 2:
                 ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
                 channel = 4

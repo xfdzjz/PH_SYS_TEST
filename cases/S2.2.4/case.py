@@ -43,6 +43,8 @@ def test(ctx):
             resp = ctx.tester.runCommand("next",3)
             counter = counter +1
         else:
+            if counter == 2: # 此时串口波特率已不正确
+                break
             return False
 
     return True

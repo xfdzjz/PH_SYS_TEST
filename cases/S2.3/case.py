@@ -25,13 +25,13 @@ def test(ctx):
     if resp == 'ready':
         amp = ctx.sourcemeter.ampTest()
         print(amp)
-        ctx.logger.info("ISRCS amp is %f when VCC is 3.3v"%amp)
+        ctx.logger.info("ISRCS amp is %f uA when VCC is 3.3v" % (amp * 1000000))
         ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)
         amp = ctx.sourcemeter.ampTest()
-        ctx.logger.info("ISRCS amp is %f when VCC is 5v"%amp)
+        ctx.logger.info("ISRCS amp is %f uA when VCC is 5v"% (amp  * 1000000))
         ctx.powersupply.voltageOutput(3, 5, 0.1, 5, 1)
         amp = ctx.sourcemeter.ampTest()
-        ctx.logger.info("ISRCS amp is %f when VCC is 2.2v"%amp)
+        ctx.logger.info("ISRCS amp is %f uA when VCC is 2.2v"% (amp * 1000000))
         resp = ctx.tester.runCommand("next",5)
 
     if resp!= 'end':

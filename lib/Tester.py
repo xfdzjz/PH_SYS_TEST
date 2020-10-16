@@ -18,9 +18,9 @@ class Tester:
     def runCommand(self, cmd, timeout=None):
         # 读SN小把戏
         if cmd == 'test_mode_sel':
-            self.SN = self.runCommand("cReadSN",0.2)
+            self.SN = self.runCommand("cReadSN",2)
         elif cmd == 'EnterEstMode':
-            self.SN = self.runCommand("ReadSN",0.2)
+            self.SN = self.runCommand("ReadSN",2)
 
         self.port.close()
         self.port.open()
@@ -36,8 +36,12 @@ class Tester:
             self.port.timeout = 2
         readVal = self.port.read(100)
         # readVal = self.port.read_all()
-        val = readVal.decode("ascii")
-        print("RESP: %s(%d)" % (val, len(val)) )
+        print("RESP: ", readVal )
+        val = ""
+        try:
+            val = readVal.decode("ascii")
+        except:
+            pass
         return val
 
     def runC(self, cmd, timeout=None):# communication using serial port and how much string number will be read

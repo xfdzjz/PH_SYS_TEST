@@ -23,16 +23,15 @@ def test(ctx):
     ctx.logger.info(resp)
     if resp == 'ready':
         amp = ctx.sourcemeter.ampTest()
-        input('n')
-        ctx.logger.info("indled amp is %f when VCC is 3.3v"%amp)
+        ctx.logger.info("indled amp is %f when VCC is 3.3v"% (amp * 1000000))
         ctx.powersupply.voltageOutput(3, 2.2, 0.5, 5.1, 1)
         ctx.sourcemeter.applyVoltage(2.2-0.5) # FIXME: check and fix
         amp = ctx.sourcemeter.ampTest()
-        ctx.logger.info("indled amp is %f when VCC is 2.2v"%amp)
+        ctx.logger.info("indled amp is %f when VCC is 2.2v"%(amp * 1000000))
         ctx.powersupply.voltageOutput(3, 5, 0.5, 5.1, 1)
         ctx.sourcemeter.applyVoltage(5-0.5) # FIXME: check and fix
         amp = ctx.sourcemeter.ampTest()
-        ctx.logger.info("indled amp is %f when VCC is 5v"%amp)
+        ctx.logger.info("indled amp is %f when VCC is 5v"%(amp * 1000000))
 
 
     resp = ctx.tester.runCommand("next",3)

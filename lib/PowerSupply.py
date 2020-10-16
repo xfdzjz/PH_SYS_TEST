@@ -12,19 +12,23 @@ class PowerSupply:
 
     def stopAll(self):
         # 复位到待接线状态
-        self.inst.write(":OUTPut1:STATe OFF")
-        self.inst.write(":OUTPut2:STATe OFF")
-        self.inst.write(":OUTPut3:STATe OFF")
-        self.inst.write(":OUTPut4:STATe OFF")
+        for channel in range(1,5):
+            self.inst.write(":OUTPut%d:STATe ON" % (channel))
+            self.inst.write(":OUTPut%d:OCP:STATe ON" % channel)
+            self.inst.write(":OUTPut%d:OVP:STATe ON" % channel)
+            self.inst.write(":OUTPut%d:OVP %f" % (channel, 6))
+            self.inst.write(":OUTPut%d:OCP %f" % (channel, 1))
+            self.inst.write("ISET%d:%f" % (channel, 0.2))
+            self.inst.write(":OUTPut%d:STATe OFF"% (channel))
 
     def voltageOutput(self, channel, V, I, ovp, ocp): #open one channel
         # print("Try set voltage to %f:%f:%f:%f" % (V ,I, ovp, ocp))
         self.inst.write(":OUTPut%d:STATe ON" % (channel))
-        self.inst.write(":OUTPut%d:OCP:STATe ON" % channel)
-        self.inst.write(":OUTPut%d:OVP:STATe ON" % channel)
-        self.inst.write(":OUTPut%d:OVP %f" % (channel, ovp))
-        self.inst.write(":OUTPut%d:OCP %f" % (channel, ocp))
-        self.inst.write("ISET%d:%f" % (channel, I))
+        # self.inst.write(":OUTPut%d:OCP:STATe ON" % channel)
+        # self.inst.write(":OUTPut%d:OVP:STATe ON" % channel)
+        # self.inst.write(":OUTPut%d:OVP %f" % (channel, ovp))
+        # self.inst.write(":OUTPut%d:OCP %f" % (channel, ocp))
+        # self.inst.write("ISET%d:%f" % (channel, I))
         self.inst.write("VSET%d:%f" % (channel, V))
         time.sleep(0.3) # 等待 300ms 电压正常输出
 
