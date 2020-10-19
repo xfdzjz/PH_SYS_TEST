@@ -142,7 +142,7 @@ class SourceMeter:
         amp =  self.readCommand('print(smua.measure.iv())')
         for i in range(0,len(amp)):
             if amp[i]== 'e':
-                print(amp[0:i+4])
+                # print(amp[0:i+4])
                 amp = float(amp[0:i+4])
                 break
         return amp

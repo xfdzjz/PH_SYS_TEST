@@ -1,11 +1,11 @@
 
 import time
-title = "bvsMaxCur"
+title = "BVS电流"
 
 desc = '''
     relay k25 connect
 '''
-
+POWERON_DELAY = 2
 def test(ctx):
     '''
     ctx为测试上下文对象，包含初始化好的各测试仪表
@@ -18,10 +18,10 @@ def test(ctx):
     ctx.sourcemeter.applyVoltage(3.3)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
-    ctx.tester.runCommand("bvsMaxCur",3)
+    ctx.tester.runCommand("bvsMaxCur",POWERON_DELAY+1)
 
-    amp = ctx.sourcemeter.ampTest()
-    ctx.logger.info("I_BVS amp is %f when VCC is 3.3v"%amp)
+    amp = ctx.sourcemeter.ampTest() * 1000
+    ctx.logger.info("I_BVS amp is %f mA when VCC is 3.3v"%amp)
 
 
     return True

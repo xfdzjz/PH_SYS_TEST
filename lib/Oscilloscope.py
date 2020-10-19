@@ -37,8 +37,8 @@ class Oscilloscope:
     def statusCheck(self): #check the status is stop or run or wait
         time.sleep(0.5)
         resu =  self.inst.query(":TRIGger:STATus?")
-        print(resu)
-        if resu[:4] == 'STOP':
+        # print(resu)
+        if resu[:4] == 'STOP' or resu[:2] == 'TD':
             return True
         else:
             return False
@@ -126,7 +126,7 @@ class Oscilloscope:
         for i in range(0,len(val)-1):
             val[i] = float(val[i])
 
-        print("read_data length is %d" %len(val))
+        # print("read_data length is %d" %len(val))
         return (val)
 
     def readRamData(self,channel,count,start,final, do ='false'):
@@ -135,6 +135,8 @@ class Oscilloscope:
         self.inst.write(":STOP")
         self.inst.write("WAV:SOUR CHAN%d" %channel)
         self.inst.write(":WAV:MODE NORMal")
+        # self.inst.write(":WAV:MODE MAX")
+        # self.inst.write(":WAV:MODE RAW")
         self.inst.write(":WAV:FORM ASCii")
         #ramSpace= final//count
         self.inst.write(":WAV:STAR %d" %start)
@@ -143,7 +145,6 @@ class Oscilloscope:
         val = data.split(",")
         val[0] = val[0][11:]
         val[len(val)-1] = val[len(val)-1] [:-1]
-        print(len(val))
         if do == 'false':
             for i in range(0,len(val)):
                 val[i] = float(val[i])

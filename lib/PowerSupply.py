@@ -16,7 +16,7 @@ class PowerSupply:
             self.inst.write(":OUTPut%d:STATe ON" % (channel))
             self.inst.write(":OUTPut%d:OCP:STATe ON" % channel)
             self.inst.write(":OUTPut%d:OVP:STATe ON" % channel)
-            self.inst.write(":OUTPut%d:OVP %f" % (channel, 6))
+            self.inst.write(":OUTPut%d:OVP %f" % (channel, 12))
             self.inst.write(":OUTPut%d:OCP %f" % (channel, 1))
             self.inst.write("ISET%d:%f" % (channel, 0.2))
             self.inst.write(":OUTPut%d:STATe OFF"% (channel))
