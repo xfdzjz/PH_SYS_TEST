@@ -15,14 +15,12 @@ def test(ctx):
     # 芯片上电VCC=3V, Channel=1
 
     ctx.netmatrix.arrset(['00000010','00000000','00000000','00000000'])#VCC->SRC
-    ctx.powersupply.voltageOutput(3, 3.3, 1, 5, 1)
-    time.sleep(0.250)
+    ctx.sourcemeter.applyVoltage(3.3)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     ctx.tester.runCommand("PowerDown",3)
 
     amp = ctx.sourcemeter.ampTest()
-    input('n')
     ctx.logger.info("I_pwrdown amp is %f when VCC is 3v"%amp)
     ctx.sourcemeter.applyVoltage(5)
     amp = ctx.sourcemeter.ampTest()
@@ -30,8 +28,5 @@ def test(ctx):
     ctx.sourcemeter.applyVoltage(2.2)
     amp = ctx.sourcemeter.ampTest()
     ctx.logger.info("I_pwrdown amp is %f when VCC is 2.2v"%amp)
-
-    ctx.powersupply.voltageOutput(3, 3.3, 1, 5, 1)
-
 
     return True

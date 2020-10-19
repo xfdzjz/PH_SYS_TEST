@@ -15,7 +15,6 @@ def test(ctx):
     # 芯片上电VCC=3V, Channel=1
     ctx.netmatrix.arrset(['00000010','00000000','00000100','00000010'])#VCC->src，osc1 por->osc2
     ctx.sourcemeter.applyVoltage(3.3)
-    time.sleep(0.1)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
 
@@ -27,9 +26,8 @@ def test(ctx):
     vol = ctx.oscilloscope.readRamData(2,2,1,15625,'True')
     if ctx.oscilloscope.statusCheck() == False:
         return False
-    print(vol)
-    print(vol1)
-    input('n')
+    # print(vol)
+    # print(vol1)
 
     time.sleep(1)
 
@@ -39,9 +37,8 @@ def test(ctx):
     vol2 = ctx.oscilloscope.readRamData(1,2,1,15625,'True')# readRamData(self,channel,count,start,final, do ='false'):
     vol3 = ctx.oscilloscope.readRamData(2,2,1,15625,'True')
 
-    print(vol2)
-    print(vol3)
-    input('n')
+    # print(vol2)
+    # print(vol3)
 
     for i in range(0,len(vol)):
         if float(vol[i]) >= 1.45 :
