@@ -47,7 +47,7 @@ def test(ctx):
     ctx.powersupply.voltageOutput(4, 10.5, 0.1, 12, 1)
     ctx.netmatrix.arrset(['01000000','00000000','00000000','00000000'])#HORNS->SRC
     ctx.sourcemeter.applyVol(10)
-    input("n")
+    # input("n")
     amp = ctx.sourcemeter.ampTest() * 1000
     ctx.logger.info("I_BZPS amp is %f mA when sourmeter is 10v"%amp)
     resp = ctx.tester.runCommand("next")

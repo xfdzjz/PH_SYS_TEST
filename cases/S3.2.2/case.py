@@ -62,6 +62,7 @@ def test(ctx):
     # ctx.oscilloscope.trigMul(1,'POS',1.5,scale = 0.05)
     time.sleep(2)
     ctx.oscilloscope.statusCheck()
+    time.sleep(2)
     ctx.sourcemeter.applyVoltage(3)
     for i in range(0,5):
         if ctx.oscilloscope.statusCheck() :
@@ -88,9 +89,10 @@ def test(ctx):
     # ctx.oscilloscope.trigMul(2,'POS',0.7,scale = 0.02)
     ctx.oscilloscope.trig(2,'POS',1.3,scale = 0.5)
     #ctx.oscilloscope.trigSlope(1,"PGReater",0.1,1.5,0.1)
-
-    ctx.sourcemeter.rampvol(0,3.1, 0.033,0.1)#(start,target,de,steps): 33ms->上升1v
-    time.sleep(1)
+    ctx.oscilloscope.statusCheck()
+    time.sleep(2)
+    ctx.sourcemeter.rampvol(0,3.0, 0.033,0.2)#(start,target,de,steps): 33ms->上升1v
+    # time.sleep(1)
     for i in range(0,5):
         if ctx.oscilloscope.statusCheck() :
             break

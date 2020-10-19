@@ -62,6 +62,7 @@ class SourceMeter:
         # 复位到待接线状态
         self.runCommand('smua.source.levelv = 0')
         self.runCommand('smua.source.output = smua.OUTPUT_OFF')
+        self.runCommand('errorqueue.clear()')
 
     def runCommand(self, cmd):# communication using serial port and how much string number will be read
         self.port.write((cmd+'\r\n').encode('ascii')) # command ending char " "
@@ -191,7 +192,7 @@ class SourceMeter:
         for v in np.arange(vcurr, target, step):
              self.runCommand('smua.source.levelv = %f' %v)
              time.sleep(de)
-        self.runCommand('smua.source.levelv = target')
+        self.runCommand('smua.source.levelv = %f' % target)
         self.runCommand('beeper.beep(0.3, 2400)')
 
 

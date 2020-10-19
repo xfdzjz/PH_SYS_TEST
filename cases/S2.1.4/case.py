@@ -38,7 +38,6 @@ def test(ctx):
             duty = para[0]
             ctx.logger.info("VCC is 5v fre is %f, duty is %f" %(fre,duty))
         else:
-            print("Fail")
             return False
         resp = ctx.tester.runCommand("next",1)
 

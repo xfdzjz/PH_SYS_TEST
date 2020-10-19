@@ -22,25 +22,18 @@ def test(ctx):
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("HRCTestOnVCCVerify", 3)
     ctx.oscilloscope.timeset(0.000001)#示波器x轴一格多宽
-
+    scale = [0.000001, 0.0000004, 0.0000002, 0.0000001, 0.00000005]
     while resp != 'end':
         if resp[0:3] == 'hrc':
-            count = count +1
-            para = ctx.oscilloscope.paraTest(2)
-            fre = para[1]
-            duty = para[0]
-            ctx.logger.info("VCC is 3.3v fre is %f, duty is %f" % (fre, duty))
-            ctx.powersupply.voltageOutput(3, 2.2, 0.1, 6, 1)
-            para = ctx.oscilloscope.paraTest(2)
-            fre = para[1]
-            duty = para[0]
-            ctx.logger.info("VCC is 2.2v fre is %f, duty is %f" % (fre, duty))
-            ctx.powersupply.voltageOutput(3, 5, 0.1, 6, 1)
-            para = ctx.oscilloscope.paraTest(2)
-            fre = para[1]
-            duty = para[0]
-            ctx.logger.info("VCC is 5v fre is %f, duty is %f" % (fre, duty))
-            ctx.powersupply.voltageOutput(3, 3.3, 0.1, 6, 1)
+            for vcc in [3.3, 5, 2.2]:
+                ctx.powersupply.voltageOutput(3, vcc, 0.1, 6, 1)
+                ctx.oscilloscope.inst.write(":TIMebase:MAIN:SCALe %1.8f" %scale[count])
+                ctx.oscilloscope.inst.write(":RUN")
+                time.sleep(0.1)
+                ctx.oscilloscope.inst.write(":STOP")
+                duty, fre = ctx.oscilloscope.paraTest(2)
+                ctx.logger.info("VCC is %1.1fv fre is %f, duty is %f" % (vcc, fre, duty))
+            count = count + 1
         else:
             return False
         resp = ctx.tester.runCommand("next", 1)
