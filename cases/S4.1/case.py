@@ -33,7 +33,7 @@ def test(ctx):
     if resp != 'ready':
         return False
 
-    loopParams = [
+    loopParams1 = [
         # [I2跳线， I3跳线，PS4电压， PS2电压]
         ['10000000', '00000001', 2.5, 1.5 ], #GP00,18
         ['10000000', '00000001', 1.0, 1.5 ], #GP00,18
@@ -51,6 +51,8 @@ def test(ctx):
         ['10000000', '00000000', 1.0, 1.5 ], #GP00,int
         ['10000000', '00000000', 2.5, 1.5 ], #GP00,int
         ['10000000', '00000000', 1.0, 1.5 ], #GP00,int
+    ]
+    loopParams2 = [
         ['10000000', '00000001', 1.5, 2.5 ], #GP00,18
         ['10000000', '00000001', 1.5, 1.0 ], #GP00,18
         ['00000010', '00000001', 1.5, 2.5 ], #GP15,18
@@ -69,16 +71,25 @@ def test(ctx):
         ['00000000', '00000001', 1.5, 1.0 ]
     ]
 
-    for p in loopParams:
+    for p in loopParams1:
         ctx.netmatrix.arrset(['00000000',p[0],p[1],'00000000'])
-        ctx.powersupply.voltageOutput(4, p[3], 0.1, 3.3, 1)#v2
-        ctx.powersupply.voltageOutput(2, p[2], 0.1, 3.3, 1)#v1
+        ctx.powersupply.voltageOutput(2, p[3], 0.1, 3.3, 1)#v2
+        ctx.powersupply.voltageOutput(4, p[2], 0.1, 3.3, 1)#v1
         resp = ctx.tester.runCommand("next",2)
-        PassOrFail.append(resp)
+        ctx.logger.info("[%s,%s,%f,%f] : %s" % (p[0],p[1],p[2],p[3],resp))
+        if resp != 'pass' and resp != '1000mv':
+            return False
 
-    ctx.logger.info(PassOrFail)
-    if PassOrFail[-1]  != 'end':
+    resp = ctx.tester.runCommand("next",2)
+    if resp != 'ready':
         return False
 
-
+    for p in loopParams2:
+        ctx.netmatrix.arrset(['00000000',p[0],p[1],'00000000'])
+        ctx.powersupply.voltageOutput(2, p[3], 0.1, 3.3, 1)#v2
+        ctx.powersupply.voltageOutput(4, p[2], 0.1, 3.3, 1)#v1
+        resp = ctx.tester.runCommand("next",2)
+        ctx.logger.info("[%s,%s,%f,%f] : %s" % (p[0],p[1],p[2],p[3],resp))
+        if resp != 'pass' and resp != '1000mv':
+            return False
     return True
