@@ -22,7 +22,7 @@ def test(ctx):
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("HRCTestOnVCCVerify", 3)
     ctx.oscilloscope.timeset(0.000001)#示波器x轴一格多宽
-    scale = [0.000001, 0.0000004, 0.0000002, 0.0000001, 0.00000005]
+    scale = [0.000001, 0.0000002, 0.0000002, 0.0000001, 0.00000005]
     while resp != 'end':
         if resp[0:3] == 'hrc':
             for vcc in [3.3, 5, 2.2]:
@@ -31,6 +31,7 @@ def test(ctx):
                 ctx.oscilloscope.inst.write(":RUN")
                 time.sleep(0.1)
                 ctx.oscilloscope.inst.write(":STOP")
+                time.sleep(1)
                 duty, fre = ctx.oscilloscope.paraTest(2)
                 ctx.logger.info("VCC is %1.1fv fre is %f, duty is %f" % (vcc, fre, duty))
             count = count + 1

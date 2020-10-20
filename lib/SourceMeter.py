@@ -62,7 +62,9 @@ class SourceMeter:
         # 复位到待接线状态
         self.runCommand('smua.source.levelv = 0')
         self.runCommand('smua.source.output = smua.OUTPUT_OFF')
-        self.runCommand('errorqueue.clear()')
+        self.runCommand('display.smua.measure.func = display.MEASURE_DCVOLTS')
+        self.runCommand('smua.source.limitv = 30')
+        # self.runCommand('errorqueue.clear()')
 
     def runCommand(self, cmd):# communication using serial port and how much string number will be read
         self.port.write((cmd+'\r\n').encode('ascii')) # command ending char " "
@@ -126,20 +128,23 @@ class SourceMeter:
         self.applyVoltage(target)
 
     def volTest(self):
-        self.runCommand('smua.source.output = smua.OUTPUT_ON')
+        self.runCommand('display.smua.measure.func = display.MEASURE_DCVOLTS')
         self.runCommand('smua.measure.autorangev = smua.AUTORANGE_ON')
-        self.runCommand('smua.source.rangev = 10')
-        self.runCommand('smua.source.rangei = 0.1')
-        self.runCommand('smuX.source.limiti = 1')
+        self.runCommand('smua.source.rangev = 3')
+        # self.runCommand('smua.source.limitv = 3')
+        self.runCommand('smua.source.output = smua.OUTPUT_ON')
+        # self.runCommand('smua.source.rangei = 0.1')
+        # self.runCommand('smua.source.limiti = 0.1')
         a =  float(self.readCommand('print(smua.measure.v())'))
         return a
 
 
     def ampTest(self):
+        self.runCommand('display.smua.measure.func = display.MEASURE_DCAMPS')
         self.runCommand('smua.measure.autorangei = smua.AUTORANGE_ON')
         self.runCommand('smua.measure.autorangev = smua.AUTORANGE_ON')
-        self.runCommand('smua.source.output = smua.OUTPUT_ON')
         self.runCommand('smua.source.rangei = 0.1')
+        self.runCommand('smua.source.output = smua.OUTPUT_ON')
         amp =  self.readCommand('print(smua.measure.iv())')
         for i in range(0,len(amp)):
             if amp[i]== 'e':
@@ -148,6 +153,16 @@ class SourceMeter:
                 break
         return amp
 
+    def ivTest(self):
+        self.runCommand('display.smua.measure.func = display.MEASURE_DCVOLTS')
+        self.runCommand('smua.measure.autorangei = smua.AUTORANGE_ON')
+        self.runCommand('smua.measure.autorangev = smua.AUTORANGE_ON')
+        self.runCommand('smua.source.rangev = 3')
+        self.runCommand('smua.source.rangei = 0.1')
+        self.runCommand('smua.source.output = smua.OUTPUT_ON')
+        s =  self.readCommand('print(smua.measure.iv())')
+        [i,v] = s.split()
+        return float(i),float(v)
 
     def channel(self,on):
         if on == 'on':
@@ -205,6 +220,7 @@ class SourceMeter:
 
 if __name__ == "__main__":
     m = SourceMeter({"tcp_addr":"TCPIP0::172.16.60.100::INSTR","port":"COM7","baudRate": 115200})
-    # print(m.volTest())
-    m.loadScript()
+    m.applyVoltage(3)
+    print(m.ivTest())
+    # m.loadScript()
     print("PASS")

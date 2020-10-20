@@ -22,6 +22,7 @@ class Oscilloscope:
         rm = visa.ResourceManager()
         inst = rm.open_resource(config["tcp_addr"])
         self.inst = inst
+        self.inst.timeout=5000 #设置timeout时间，设为5秒
         self.inst.write(":CLEar")
 
 

@@ -13,7 +13,7 @@ def test(ctx):
     ctx.multimeter 未使用
     '''
     # 芯片上电VCC=3V, Channel=1
-    ctx.netmatrix.arrset(['01000000','00000010','00000000','00000000'])#HORNS->SRC
+    ctx.netmatrix.arrset(['01000000','00000000','00000000','00000000'])#HORNS->SRC
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
     ctx.powersupply.voltageOutput(2, 10.5, 0.1, 3.3, 1)#vh
     ctx.powersupply.voltageOutput(4, 0, 0.1, 3.3, 1)#FI
@@ -27,36 +27,40 @@ def test(ctx):
     ctx.sourcemeter.applyVoltage(0.5)#源表给电压
     amp = ctx.sourcemeter.ampTest() * 1000 #源表测电流
     ctx.logger.info("I_BZNS amp is %f mA when sourmeter is 0.5v"%amp)
+    ctx.sourcemeter.applyVoltage(0.0)#源表给电压
     resp = ctx.tester.runCommand("next")
     if resp != 'ready':
         return False
 
     ctx.sourcemeter.channel('off')
-    time.sleep(2)
     ctx.netmatrix.arrset(['00100000','00000000','00000000','00000000'])#HORNB->SRC
-    ctx.sourcemeter.applyVol(10)
+    i,v = ctx.sourcemeter.ivTest()
+    print(i,v)
+    input("n")
+    # ctx.sourcemeter.applyVol(10)
     ctx.sourcemeter.channel('on')
     time.sleep(3)
     amp = ctx.sourcemeter.ampTest() * 1000
     ctx.logger.info("I_BZPB amp is %f mA when sourmeter is 10v"%amp)
+    ctx.sourcemeter.applyVol(0)
     resp = ctx.tester.runCommand("next")
     if resp != 'ready':
         return False
 
-    ctx.netmatrix.arrset(['00000000','00000000','00000000','00000000'])
     ctx.powersupply.voltageOutput(4, 10.5, 0.1, 12, 1)
+    input("n")
     ctx.netmatrix.arrset(['01000000','00000000','00000000','00000000'])#HORNS->SRC
     ctx.sourcemeter.applyVol(10)
-    # input("n")
     amp = ctx.sourcemeter.ampTest() * 1000
     ctx.logger.info("I_BZPS amp is %f mA when sourmeter is 10v"%amp)
     resp = ctx.tester.runCommand("next")
     if resp != 'ready':
         return False
+    input("n")
 
     ctx.sourcemeter.channel('off')
     time.sleep(2)
-    ctx.netmatrix.arrset(['00100000','00000010','00000000','00000000'])#HORNB->SRC
+    ctx.netmatrix.arrset(['00100000','00000000','00000000','00000000'])#HORNB->SRC
     ctx.sourcemeter.applyVoltage(0.5)
     ctx.sourcemeter.channel('on')
     time.sleep(3)
