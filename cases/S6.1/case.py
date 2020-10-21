@@ -23,19 +23,19 @@ def test(ctx):
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
     resp = ctx.tester.runCommand("test_dcdc_duty")
+    ctx.oscilloscope.timeset(0.000001)
 
 
     while resp != 'end':
         if resp == 'ready':
-            ctx.oscilloscope.prepareChannel(2, 1000, 300)
-            wave = ctx.oscilloscope.getWave(2, 1000, 300)
-            para = ctx.oscilloscope.paraTest(2)
+            time.sleep(1)
+            para = ctx.oscilloscope.paraTest(1)
             duty = 100*float(para[0])
             freq = float(para[1])
 
-
-            ctx.logger.info("duty is %f percent, frequency is %f"%(duty,freq))
-            ctx.logger.debug("duty is %f percent, frequency is %f"%(duty,freq))
+            if duty> 100:
+                return False
+            ctx.logger.info("duty is %f percent, frequency is %f"%(100-duty,freq))
             #ctx.logger.info(wave)
             resp = ctx.tester.runCommand("next")
         else:

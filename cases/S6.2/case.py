@@ -32,19 +32,25 @@ def test(ctx):
         ctx.logger.info(resp)
         ctx.logger.debug(resp)
         if resp == '100mv+':
+            time.sleep(0.1)
             vol = vol + 100
             ctx.powersupply.voltageOutput(2, vol/1000 , 0.1, 7, 1)
             ctx.logger.info(vol)
             resp = ctx.tester.runCommand("next")
         elif resp == '100mv-':
+            time.sleep(0.1)
             vol = vol - 100
             ctx.powersupply.voltageOutput(2, vol/1000 , 0.1, 7, 1)
             resp = ctx.tester.runCommand("next")
         elif resp[:3] == "vok":
-            ctx.logger.info(resp[:4] + "vol is %sv" %resp[-5:-2])
-            vol = float(resp[-5:-2])
+            time.sleep(0.1)
+            if len(resp)>12:
+                resp = resp[:-6]
+            ctx.logger.info(resp[:4] + " vol is %smv" %resp[-4:])
+            vol = float(resp[-4:])
             resp = ctx.tester.runCommand("next")
         elif resp[-2:] == 'mv':
+            time.sleep(0.1)
             vol = float(resp[:-2])
             ctx.powersupply.voltageOutput(2, vol/1000, 0.1, 7, 1)
             resp = ctx.tester.runCommand("next")

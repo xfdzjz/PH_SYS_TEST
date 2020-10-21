@@ -32,6 +32,17 @@ class PowerSupply:
         self.inst.write("VSET%d:%f" % (channel, V))
         time.sleep(0.3) # 等待 300ms 电压正常输出
 
+    def ocp(self,channel, i):
+        self.inst.write(":OUTPut%d:OCP:STATe ON" % channel)
+        self.inst.write(":OUTPut%d:OCP %f" % (channel, i))
+
+    def ovp(self,channel, i):
+        self.inst.write(":OUTPut%d:OVP:STATe ON" % channel)
+        self.inst.write(":OUTPut%d:OVP %f" % (channel, i))
+
+    def iset(self,channel, i):
+        self.inst.write("ISET%d:%f" % (channel, i))
+
     def resistor(self,channel,ohm, ovp, ocp):
         self.inst.write(":OUTPut%d:STATe ON" % (channel))
         self.inst.write(":LOAD%d:CR ON " %(channel))

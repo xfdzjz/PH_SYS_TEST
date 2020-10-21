@@ -55,7 +55,7 @@ class Oscilloscope:
         pass
 
     def timeset(self,scale= 0.01):
-        self.inst.write(":TIMebase:MAIN:SCALe %f" %scale)
+        self.inst.write(":TIMebase:MAIN:SCALe %1.8f" %scale)
 
     def runsta(self):
         self.inst.write(":RUN ")
@@ -213,11 +213,12 @@ class Oscilloscope:
         self.inst.write(":MEASure:ITEM PDUTy,CHANnel%d"%channel)
         self.inst.write(":MEASure:ITEM FREQuency,CHANnel%d"%channel)
         self.inst.write(":MEASure:ADISplay ON")
-        time.sleep(0.3)
-        self.inst.write(":MEASure:ADISplay OFF")
-        duty = self.inst.query(":MEASure:ITEM? PDUTy,CHANnel%d"%channel)
-        frequency = self.inst.query(":MEASure:ITEM? FREQuency,CHANnel%d"%channel)
+        time.sleep(3)
         self.inst.write(":STOP")
+        # self.inst.write(":MEASure:ADISplay OFF")
+        duty = self.inst.query(":MEASure:ITEM? PDUTy,CHANnel%d"%channel)
+        time.sleep(0.5)
+        frequency = self.inst.query(":MEASure:ITEM? FREQuency,CHANnel%d"%channel)
         para.append(float(duty))
         para.append(float(frequency))
         return para
