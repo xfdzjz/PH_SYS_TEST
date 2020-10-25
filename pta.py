@@ -42,46 +42,18 @@ def parseCase(case, lines):
     return SN, RESULT, data
 
 
-def printWithFormatter(test_case, ts, sn, result, data):
-    exectime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts))
-    print("用例:%s, 执行时间:%s, SN=%s, 执行结果: %s" %
-          (test_case, exectime, sn, result))
-    params = []  # 输出参数， 数组
-    allParams = []
-    fmtFilter = printExt.ptaFormatters[test_case][0]  # 参数过滤器
-    fmt = printExt.ptaFormatters[test_case][1]  # 打印格式
-    for t in data:  # data为元组数组, 展开成一维数组allParams
-        if isinstance(t,tuple):
-            t = list(t)
-            allParams.extend(t)
-        elif isinstance(t,list):
-            allParams.extend(t)
-        else:
-            allParams.append(t)
-    for i in fmtFilter:
-        params.append(allParams[i])
-    params = tuple(params)  # 转元组供打印
-    print(fmt % params)
-    print()
-
-
-def printDefault(test_case, ts, sn, result, data):
-    exectime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts))
-    print("用例:%s, 执行时间:%s, SN=%s, 执行结果: %s" %
-          (test_case, exectime, sn, result))
-    print(data)
-    print()
-
 
 def printCase(test_case, ts, sn, result, data):
     printCaseFuncName = ("print" + test_case).replace(".", "_")
     printCaseFunc = funcExist(printExt, printCaseFuncName)
     if printCaseFunc != False:
         printCaseFunc(test_case, ts, sn, result, data)
-    elif test_case in printExt.ptaFormatters:
-        printWithFormatter(test_case, ts, sn, result, data)
+    # elif test_case in printExt.ptaFormatters:
     else:
-        printDefault(test_case, ts, sn, result, data)
+        try:
+            printExt.printWithFormatter(test_case, ts, sn, result, data)
+        except:
+            print("\t\tCASE %s for %s print Failed!" % (test_case, sn))
 
 
 def parseFile(filename):
@@ -115,19 +87,21 @@ def parseFile(filename):
 
 def main():
     if len(sys.argv) == 1:
-        print("Usage: %s logfile1 [logfile2] ..." % (sys.argv[0]))
+        print("Usage: %s logdir resultXLSX" % (sys.argv[0]))
         return
 
-    # 如果模块中有需要初始化的部分，比如打开数据库可以在init函数实现
-    # initFunc = funcExist(parseExt, "init")
-    # if initFunc != False:
-    #     initFunc()
-    # initFunc = funcExist(printExt, "init")
-    # if initFunc != False:
-    #     initFunc()
+    dataDir = sys.argv[1]
+    resultExcel = sys.argv[2]
+    dataFiles = []
+    
+    for d in os.listdir(dataDir):
+        dataFiles.append(dataDir + "/" + d)
+    dataFiles.sort()
 
-    for i in range(1, len(sys.argv)):
-        parseFile(sys.argv[i])
+    for i in range(len(dataFiles)):
+        parseFile(dataFiles[i])
+    
+    printExt.printAll(resultExcel)
 
 
 if __name__ == "__main__":
@@ -137,4 +111,4 @@ if __name__ == "__main__":
         main()
     except RuntimeError as e:
         print(e)
-        sys.exit(2)
+        sys.exit(-1)
