@@ -22,16 +22,19 @@ def test(ctx):
     time.sleep(0.250)
     ctx.tester.runCommand("test_mode_sel")
     ctx.tester.runCommand("open_power_en")
-    resp = ctx.tester.runCommand("test_dcdc_duty")
-    ctx.oscilloscope.timeset(0.000001)
+    ctx.oscilloscope.timeset(0.000005)
+    resp = ctx.tester.runCommand("test_dcdc_duty",1)
+
 
 
     while resp != 'end':
         if resp == 'ready':
             time.sleep(1)
+            input('n')
             para = ctx.oscilloscope.paraTest(1)
             duty = 100*float(para[0])
             freq = float(para[1])
+
 
             if duty> 100:
                 return False

@@ -61,14 +61,14 @@ class Oscilloscope:
         self.inst.write(":RUN ")
 
     def trig(self, channel,triSlope,triVol,scale= 0.01,vscale = 1):#set trigger model
-        self.inst.write(":SINGle")
+
         self.inst.write(":TRIGger:MODE EDGe")
         self.inst.write(":TRIGger:EDGe:SOURce CHANnel%d" %channel)
         self.inst.write(":TRIGger:EDGe:SLOPe %s" %triSlope)
         self.inst.write(":TRIGger:EDGe:LEVel %f" %triVol)
         self.inst.write(":TIMebase:MAIN:SCALe %f" %scale)
         self.inst.write(":CHANnel%d:SCALe %f "%(channel,vscale))
-
+        self.inst.write(":SINGle")
 
     def trigMul(self, channel,triSlope,triVol,scale =  0.01,vscale = 1):#set trigger model
         self.inst.write(":RUN")
@@ -98,6 +98,10 @@ class Oscilloscope:
         self.inst.write(":TRIGger:PULSe:LEVel %f" %triVol)
         self.inst.write(":REFerence%d:SAVe" %channel)
         self.inst.write(":TIMebase:MAIN:SCALe %f" %scale)#time scale
+        self.inst.write(":CHANnel%d:SCALe  %f "%(channel,vscale))#vertical scale like 2 means 2v
+
+
+    def vscset(self, channel, vscale=1):
         self.inst.write(":CHANnel%d:SCALe  %f "%(channel,vscale))#vertical scale like 2 means 2v
 
 
@@ -212,6 +216,7 @@ class Oscilloscope:
         self.inst.write(":MEASure:SSOURce CHANnel%d" %channel)
         self.inst.write(":MEASure:ITEM PDUTy,CHANnel%d"%channel)
         self.inst.write(":MEASure:ITEM FREQuency,CHANnel%d"%channel)
+        time.sleep(1)
         self.inst.write(":MEASure:ADISplay ON")
         time.sleep(3)
         self.inst.write(":STOP")

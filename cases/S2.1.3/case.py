@@ -13,6 +13,7 @@ def test(ctx):
     ctx.sourcemeter 未使用
     ctx.multimeter 未使用
     '''
+    times = 0.000001
     # 芯片上电VCC=3V, Channel=1
     ctx.netmatrix.arrset(
         ['00000000', '00000000', '00010000', '00000000'])  # GP14->OSC
@@ -21,7 +22,9 @@ def test(ctx):
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("HRCTestOnVCCVerify", 3)
-    ctx.oscilloscope.timeset(0.000001)#示波器x轴一格多宽
+    ctx.oscilloscope.timeset(times)#示波器x轴一格多宽
+    # scale = [0.000001, 0.000001, 0.000001, 0.000001, 0.000001]
+
     scale = [0.000001, 0.0000002, 0.0000002, 0.0000001, 0.00000005]
     while resp != 'end':
         if resp[0:3] == 'hrc':

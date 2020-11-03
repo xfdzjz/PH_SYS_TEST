@@ -5,46 +5,50 @@ import numpy as np
 
 script = '''
 loadscript TSB_Script
-function amp_pre()
-	 smua.source.autorangei = smua.AUTORANGE_ON
-	 smua.source.autorangev = smua.AUTORANGE_ON
-	 smua.trigger.source.listi({100E-9})
-	 smua.trigger.source.action = smua.ENABLE
-	 smua.trigger.measure.action = smua.DISABLE
-	 trigger.timer[2].clear()
-	 trigger.timer[2].delay = 0.0001
-	 trigger.timer[2].count = 2
-	 trigger.timer[2].passthrough = true
-	 trigger.timer[2].stimulus = smua.trigger.SOURCE_COMPLETE_EVENT_ID
-	 smua.trigger.source.stimulus = 0
-	 smua.trigger.endpulse.action = smua.SOURCE_HOLD
-	 smua.trigger.endpulse.stimulus = trigger.timer[2].EVENT_ID
-	 smua.trigger.count = 2
-	 smua.trigger.arm.count = 2
-	 smua.source.output = smua.OUTPUT_ON
-end
 
-function amp()
-	 amp_pre()
-	 digio.trigger[4].mode = digio.TRIG_FALLING
-	 digio.trigger[4].clear()
-     display.clear()
-     display.settext("WAIT...")
-	 local triggered = digio.trigger[4].wait(2)
-	 if triggered then
-        display.settext("OK")
-	 	smua.trigger.initiate()
-		waitcomplete()
-     else
-	 	display.settext("NO")
-	 end
-	 digio.trigger[4].release()
-	 digio.trigger[4].reset()
-end
+reset()
+smua.reset()
+errorqueue.clear()
+localnode.prompts = 0
+localnode.showerrors = 0
 
-amp()
+-- print(errorqueue.next())
+smua.source.output = 0
+smua.source.autorangev = 0
+smua.source.rangev = 5.000000
+smua.source.lowrangev = 0.0
+smua.source.offmode = smua.OUTPUT_NORMAL
+smua.source.levelv = 0.000000
+smua.source.limiti = 0.100000
+smua.source.func = smua.OUTPUT_DCVOLTS
+smua.trigger.source.action = smua.ENABLE
+smua.trigger.source.listv ({0.002})
+smua.trigger.source.limiti = 0.100000
+smua.trigger.arm.count = 1
+smua.trigger.count = 1
+smua.trigger.source.stimulus = trigger.timer[1].EVENT_ID
+smua.trigger.measure.action = smua.DISABLE
+smua.trigger.measure.stimulus = 0
+digio.trigger[1].mode = digio.TRIG_RISING
+digio.trigger[1].pulsewidth = 0.000010
+smua.trigger.arm.stimulus = digio.trigger[1].EVENT_ID
+smua.trigger.endpulse.action = smua.SOURCE_HOLD -- smua.SOURCE_IDLE
+trigger.timer[1].delay = 0.000100
+trigger.timer[1].count = 1
+trigger.timer[1].passthrough = false
+trigger.timer[1].stimulus = smua.trigger.ARMED_EVENT_ID
+smua.trigger.source.stimulus = smua.trigger.SWEEPING_EVENT_ID
+smua.trigger.endpulse.stimulus = trigger.timer[1].EVENT_ID
+smua.source.output = 1
+smua.trigger.initiate()
+waitcomplete()
+smua.source.output = 0
+-- print(errorqueue.next())
+
 endscript
 '''
+
+
 
 
 class SourceMeter:
@@ -63,8 +67,11 @@ class SourceMeter:
         self.runCommand('smua.source.levelv = 0')
         self.runCommand('smua.source.output = smua.OUTPUT_OFF')
         self.runCommand('display.smua.measure.func = display.MEASURE_DCVOLTS')
+        # self.runCommand('smua.reset()')
         self.runCommand('smua.source.limitv = 30')
-        # self.runCommand('errorqueue.clear()')
+        # self.runCommand('smua.source.rangev = 0')
+        # self.runCommand('smua.source.limiti = 0.1')
+        self.runCommand('errorqueue.clear()')
 
     def runCommand(self, cmd):# communication using serial port and how much string number will be read
         self.port.write((cmd+'\r\n').encode('ascii')) # command ending char " "
@@ -84,13 +91,17 @@ class SourceMeter:
 
     def applyVoltage(self,vol):
         if vol <=5.0 and vol >=-1:
+            self.runCommand('smua.source.rangev = 6')
             self.runCommand('smua.source.func = smua.OUTPUT_DCVOLTS')
             self.runCommand('smua.source.levelv = %f' %vol)
             self.runCommand('smua.source.output = smua.OUTPUT_ON')
             self.runCommand('smua.source.limiti = 0.2')
+            print(vol)
             time.sleep(0.3) # 等待 300ms 电压正常输出
         else:
             raise SystemError
+
+
 
 
     def applyVol(self,vol):
@@ -115,6 +126,14 @@ class SourceMeter:
         else:
             raise SystemError
 
+    def applyCur(self,amp):
+        self.runCommand('smua.cal.polarity = smua.CAL_NEGATIVE')
+        if amp <=5.0 and amp >=-1:
+            self.runCommand('smua.source.leveli = %f' %amp)
+            self.runCommand('smua.source.output = smua.OUTPUT_ON')
+        else:
+            raise SystemError
+
 
     # def rampvol(self,start,target,step,de):# supply ramp voltage
     #     smua.trigger.source.action = smua.ENABLE
@@ -129,8 +148,9 @@ class SourceMeter:
 
     def volTest(self):
         self.runCommand('display.smua.measure.func = display.MEASURE_DCVOLTS')
+        self.runCommand('smua.measure.autorangei = smua.AUTORANGE_ON')
         self.runCommand('smua.measure.autorangev = smua.AUTORANGE_ON')
-        self.runCommand('smua.source.rangev = 3')
+        self.runCommand('smua.source.rangev = 6')
         # self.runCommand('smua.source.limitv = 3')
         self.runCommand('smua.source.output = smua.OUTPUT_ON')
         # self.runCommand('smua.source.rangei = 0.1')
@@ -146,6 +166,7 @@ class SourceMeter:
         self.runCommand('smua.source.rangei = 0.1')
         self.runCommand('smua.source.output = smua.OUTPUT_ON')
         amp =  self.readCommand('print(smua.measure.iv())')
+        print(amp.split())
         for i in range(0,len(amp)):
             if amp[i]== 'e':
                 # print(amp[0:i+4])
@@ -220,7 +241,8 @@ class SourceMeter:
 
 if __name__ == "__main__":
     m = SourceMeter({"tcp_addr":"TCPIP0::172.16.60.100::INSTR","port":"COM7","baudRate": 115200})
-    m.applyVoltage(3)
-    print(m.ivTest())
-    # m.loadScript()
-    print("PASS")
+    m.loadScript()
+    input("Press ENTER to RUN")
+    m.runCommand('TSB_Script.run()')
+    input("check result")
+

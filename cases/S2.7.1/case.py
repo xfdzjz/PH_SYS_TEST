@@ -19,54 +19,70 @@ def test(ctx):
     # 芯片上电VCC=3V
     ctx.netmatrix.arrset(['00000001','00000000','00001000','00000000'])#GP15->osc PDA->src
     ctx.powersupply.voltageOutput(3, 3.3, 1, 5, 1)
+    time.sleep(1)
+    ctx.powersupply.voltageOutput(2, 5.5, 1, 5.6, 1)
 
-    ctx.oscilloscope.trig(3,"NEG",1.5,0.01,2)
-    time.sleep(0.5)
-    resp = 'ready'
+    # ctx.oscilloscope.trig(3,"POS",2.0,1e-4,2)
+
+
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     ctx.sourcemeter.loadScript()
-    ctx.sourcemeter.runCommand('TSB_Script.run()')
+    #ctx.oscilloscope.inst.write(":SINGle")
     time.sleep(1)
-    ctx.tester.runCommand("test_pd_sensor_out_volt",0)
-    time.sleep(1)
+    # input('press ENTER to RUN')
 
-    wave = ctx.oscilloscope.readRamData(2,2,1,15625,'true')
+    ctx.sourcemeter.runCommand('TSB_Script.run()')
+    #ctx.sourcemeter.applyVoltage(0)
+
+    resp = ctx.tester.runCommand("test_pd_sensor_out_volt",1)
+    resp = int(resp,16)
+    print(resp)
+    #time.sleep(1)
+    #wave = ctx.oscilloscope.readRamData(2,2,1,15625,'true')
+
+    input('n')
 
     while resp != 'end':
-        if resp == 'ready':
+        #if resp == 'ready':
+        time.sleep(1)
+        # print(wave)
+        # if len(wave) ==1:
+        #     ctx.logger.info('no wave')
+        #     return False
+        # for i in range(0,len(wave)):
+        #     wave[i] = float(wave[i])
+        #     if wave[i] >3:
+        #         wave[i] =0
 
-            # print(wave)
-            if len(wave) ==1:
-                ctx.logger.info('no wave')
-                return False
-            for i in range(0,len(wave)):
-                wave[i] = float(wave[i])
-                if wave[i] >2:
-                    wave[i] =0
+        # wave_max = max(wave)
+        # counter = counter + 1
+        # ctx.logger.info("wave_max is %f" %wave_max)
+        # waveMax.append(wave_max)
+        # count.append(counter)
 
-            wave_max = max(wave)
-            counter = counter + 1
-            ctx.logger.info("wave_max is %f" %wave_max)
-            waveMax.append(wave_max)
-            count.append(counter)
-            ctx.oscilloscope.trig(3,"NEG",1.5,0.01,2)
-            time.sleep(1)
-            ctx.sourcemeter.runCommand('TSB_Script.run()')
-            time.sleep(1)
-            resp= ctx.tester.runCommand("next")
-            time.sleep(1)
-            wave = ctx.oscilloscope.readRamData(2,2,1,15625,'true')
+        ctx.oscilloscope.trig(3,"POS",2,1e-4,2)
+        time.sleep(1)
+        ctx.sourcemeter.loadScript()
+        ctx.oscilloscope.inst.write(":SINGle")
+        time.sleep(1)
+        # ctx.sourcemeter.applyVoltage(0)
+        ctx.sourcemeter.runCommand('TSB_Script.run()')
+        resp= ctx.tester.runCommand("next")
+        if resp!='end':
+            resp = int(resp,16)
+            print(resp)
+        time.sleep(1)
+        ctx.oscilloscope.readRamData(2,2,1,15625,'true')
+        input('n')
+        if resp !='end':
+            resp = 'ready'
 
-            if resp !='end':
-                resp = 'ready'
-        else:
-            return False
 
 
     #ctx.logger.info(count)
 
-    ctx.logger.info(waveMax)
+    #ctx.logger.info(waveMax)
 
 
     return True

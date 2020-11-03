@@ -45,13 +45,17 @@ def test(ctx):
             ctx.powersupply.voltageOutput(channel, vol, 0.1, 5, 1)
             resp = ctx.tester.runCommand("next")
         elif resp[-2:] == "mv" and resp[:6]!= "result" :
-            ctx.logger.info ("Right now is " + resp)
-            count = count+1
-            vol = float(resp[:-2])/1000
-            if vol >=2.8:
-                ctx.powersupply.voltageOutput(3, 5, 0.1, 5.1, 1)
-            ctx.logger.info(vol)
-            ctx.powersupply.voltageOutput(channel, vol, 0.1, 5, 1)
+            if resp =="1600mv":
+                ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5.1, 1)
+                vol = 1.6
+            else:
+                ctx.logger.info ("Right now is " + resp)
+                count = count+1
+                vol = float(resp[:-2])/1000
+                if vol >=2.8:
+                    ctx.powersupply.voltageOutput(3, 5, 0.1, 5.1, 1)
+                ctx.logger.info(vol)
+                ctx.powersupply.voltageOutput(channel, vol, 0.1, 5, 1)
             resp = ctx.tester.runCommand("next")
         elif resp[:6]== "result":
             ctx.logger.info( "final result is %s" %resp[7:])

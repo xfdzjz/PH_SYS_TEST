@@ -25,6 +25,8 @@ def test(ctx):
             ctx.logger.info("VCC is 2.2v vol is %f" % ctx.sourcemeter.volTest())
             ctx.powersupply.voltageOutput(3, 5, 0.1, 6, 1)
             ctx.logger.info("VCC is 5.0v vol is %f" % ctx.sourcemeter.volTest())
+
+            input('n')
         else:
             return False
         resp = ctx.tester.runCommand("next")

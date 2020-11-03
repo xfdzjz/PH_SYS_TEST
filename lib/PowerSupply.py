@@ -21,6 +21,7 @@ class PowerSupply:
             self.inst.write("ISET%d:%f" % (channel, 0.2))
             self.inst.write(":OUTPut%d:STATe OFF"% (channel))
 
+
     def voltageOutput(self, channel, V, I, ovp, ocp): #open one channel
         # print("Try set voltage to %f:%f:%f:%f" % (V ,I, ovp, ocp))
         self.inst.write(":OUTPut%d:STATe ON" % (channel))

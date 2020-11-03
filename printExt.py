@@ -5,6 +5,9 @@ import openpyxl
 testData = {}
 
 # 可以用格式化字符串输出结果的用例
+titles = ['VBGS','VBGA','HRC','LRC','MRC','Voltref','V1P5S','ISRCH 1.2u','ISRCH 5u','V1P5S LD','V1P5D','V1P5D LD','V1P5A',
+        'Isrcs','CMP','CMP INV','LVD','INDLED','PwrD''I_VCC','Dsleep','PwrD','BVS','SLP','POR','POR DLY','Thermdrv','BZ','LEDDRV','BZ PWM',
+        'POR','ADC CHANEL','CMP CHANEL1','ADC CHANEL2','DC DUTY FRE','DC VOK','DC AMP']
 ptaFormatters = {
     'S2.1.1': [None, ["VBGS@3.3V","VBGS@2.2V","VBGS@5V"]],
     'S2.1.2': [None, ["VBGA@3.3V","VBGA@2.2V","VBGA@5V"]],
@@ -15,11 +18,11 @@ ptaFormatters = {
         "Freq@3.3V","Duty@3.3V","Freq@5V","Duty@5V","Freq@2.2V","Duty@2.2V",
     ]],
     'S2.1.4': [None, ["Freq@3.3V","Duty@3.3V","Freq@2.2V","Duty@2.2V","Freq@5V","Duty@5V"]],
-    'S2.1.5': [None, ["Freq@3.3V","Duty@3.3V","Freq@2.2V","Duty@2.2V","Freq@5V","Duty@5V"]],
-    'S2.1.6': [None, ["Vref@1.2V,VCC3.3","Vref@1.2V,VCC5","Vref@1.2V,VCC2.2",
-        "Vref@1.5V,VCC3.3","Vref@1.5V,VCC5","Vref@1.5V,VCC2.2",
-        "Vref@2.0V,VCC3.3","Vref@2.0V,VCC5","Vref@2.0V,VCC2.2",
-        "Vref@2.5V,VCC3.3","Vref@2.5V,VCC5","Vref@2.5V,VCC2.2"
+    'S2.1.5': [None, ["@Freq3.3V","Duty@3.3V","Freq@2.2V","Duty@2.2V","Freq@5V","Duty@5V"]],
+    'S2.1.6': [None, ["Vref@1.2V,VCC3.3","Vref@1.2V,VCC2.2","Vref@1.2V,VCC5",
+        "Vref@1.5V,VCC3.3","Vref@1.5V,VCC2.2","Vref@1.5V,VCC5",
+        "Vref@2.0V,VCC3.3","Vref@2.0V,VCC2.2","Vref@2.0V,VCC5",
+        "Vref@2.5V,VCC3.3","Vref@2.5V,VCC2.2","Vref@2.5V,VCC5"
     ]],
     'S2.2.1': [None, ["V1P5S@1.5V,VCC=3.3V","V1P5S@1.5V,VCC=5V","V1P5S@1.5V,VCC=2.2V",
         "V1P5S@1.2V,VCC=3.3V","V1P5S@1.2V,VCC=5V","V1P5S@1.2V,VCC=2.2V",
@@ -39,9 +42,11 @@ ptaFormatters = {
     'S2.2.10': [None, ["Visrch"]],
     'S2.2.11': [None, ["Visrca"]],
     'S2.3': [None, ["Isrcs@3V","Isrcs@5V","Isrcs@2.2V"]],
-    'S2.4.1': [None, ["Vhy@0","Vhy@12","Vhy@25","Vhy@50"]],
+    # 'S2.4.1': [None, ["Vhy@0","Vhy@12","Vhy@25","Vhy@50"]],
     # 'S2.4.2': 'NOTHING',  # nothinf to parse
-    'S2.5': [None, [], False],
+    # 'S2.5': [None, [], False],
+    'S2.5':[None, ["vol","tst","vol","tst","vol","tst","vol","tst","vol","tst","vol","tst","vol","tst","vol","tst","vol","tst","vol","tst","vol","tst","vol","tst","vol","tst","vol","tst","vol","tst","vol","tst",
+                   "vol","tst","vol","tst","vol","tst","tst when vol = 1400",]],
     # 'S2.6.1': 'indled amp is (\S+) when VCC is (\S+)v',
     # 'S2.7.1': 'ready:(\S+)mv VCC is (\S+)v avg is (\S+)',  # not tested yet
     # 'S2.7.2': 'ready:(\S+)mv VCC is (\S+)v avg is (\S+)',  # not tested yet
@@ -49,13 +54,15 @@ ptaFormatters = {
     # 'S2.8.2': 'ready:(\S+)mv VCC is (\S+)v avg is (\S+)',  # not tested yet
     # 'S2.8.3': 'ready:(\S+)mv VCC is (\S+)v avg is (\S+)',  # not tested yet
     # 'S2.8.4': 'ready:(\S+)mv VCC is (\S+)v avg is (\S+)',  # not tested yet
-    'S3.1.1': [None, ["Ivcc@5V","Ivcc@3.3V","Ivcc@2.2V"]],
-    'S3.1.2': [None, ["Idsleep@5V","Idsleep@3.3V","Idsleep@2.2V"]],
-    'S3.1.3': [None, ["Ipwrdown@5V","Ipwrdown@3.3V","Ipwrdown@2.2V"]],
+    # 'S3.1.1': [None, ["Ivcc@5V","Ivcc@3.3V","Ivcc@2.2V"]],
+    'S3.1.1': [None, ["Ivcc@3V"]],
+    # 'S3.1.2': [None, ["Idsleep@5V","Idsleep@3.3V","Idsleep@2.2V"]],
+    'S3.1.2': [None, ["Idsleep@3.3V"]],
+    'S3.1.3': [None, ["Ipwrdown@3.3V"]],
     'S3.1.4': [None, ["I_BVS@3.3V"]],
     'S3.1.5': [None, ["Isleep@5V","Isleep@3.3V","Isleep@2.2V"]],
-    # 'S3.2.1': [[0, 3], ["VTR", "VTF"]],
-    # 'S3.2.2': [[0, 1], ["Tfpor", "Tspor"]],
+    'S3.5': [None, ["VTR", "VTF"]],
+    'S3.2.2': [None,["Tfpor", "Tspor"]],
     'S3.3.1': [[0,2,4],["Itherm@3.3V","Itherm@2.2V","Itherm@5V"]],
     # 'S3.3.2': [[0,2,4],["Itherm@3.3V","Itherm@2.2V","Itherm@5V"]],
     'S3.3.3': [[0,2],["Ibled@3.3V","Irbled@3.3V"]],
@@ -74,7 +81,7 @@ ptaFormatters = {
         "Duty5","Freq5","Duty6","Freq6","Duty7","Freq7","Duty8","Freq8"
     ]],
     "S6.2": [None,["VOK1","VOK2","VOK3","VOK4","VOK1","VOK2","VOK3","VOK4",
-        "VOK1","VOK2","VOK3","VOK4","VOK1","VOK2","VOK3","VOK4"
+        "VOK1","VOK2","VOK3","VOK4"
     ]],
     "S6.3": [None,["LX","VH","LX","VH","LX","VH","LX","VH"]],
 
@@ -110,7 +117,7 @@ def printWithFormatter(test_case, ts, sn, result, data):
         testData[test_case] = {sn: {"time": exectime, "result": result, "data": params}}
     else:
         testData[test_case][sn] = {"time": exectime, "result": result, "data": params}
-    
+
 
 # 特殊的输出函数，函数名为printCase_Name
 # CaseName经过.=>_变换
@@ -120,7 +127,7 @@ def printAll(resultExcel):
     sheetIndex = 0
     for case in testData:
         print("export test result for %s:" % case)
-        sheet = workbook.create_sheet(index=sheetIndex, title=case)
+        sheet = workbook.create_sheet(index=sheetIndex, title=case + titles[sheetIndex])
         sheetIndex = sheetIndex + 1
         results = testData[case]
         sheet["A1"] = "执行时间"
@@ -136,6 +143,7 @@ def printAll(resultExcel):
             sheet["A%d" % (row)] = result["time"]
             sheet["B%d" % (row)] = sn
             sheet["C%d" % (row)] = result["result"]
+
             for i in range(len(result["data"])):
                 value = None
                 if case in ptaFormatters:

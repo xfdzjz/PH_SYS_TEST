@@ -31,15 +31,15 @@ def test(ctx):
     while resp != 'end':
         ctx.logger.info(resp)
         ctx.logger.debug(resp)
-        if resp == '100mv+':
+        if resp == '50mv+':
             time.sleep(0.1)
-            vol = vol + 100
+            vol = vol + 50
             ctx.powersupply.voltageOutput(2, vol/1000 , 0.1, 7, 1)
             ctx.logger.info(vol)
             resp = ctx.tester.runCommand("next")
-        elif resp == '100mv-':
+        elif resp == '50mv-':
             time.sleep(0.1)
-            vol = vol - 100
+            vol = vol - 50
             ctx.powersupply.voltageOutput(2, vol/1000 , 0.1, 7, 1)
             resp = ctx.tester.runCommand("next")
         elif resp[:3] == "vok":

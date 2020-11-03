@@ -39,6 +39,10 @@ def parseCase(case, lines):
     elif case in parseExt.ptaParsers:
         data = re.findall(
             parseExt.ptaParsers[case], lines, re.DOTALL | re.MULTILINE)
+        if case =='S2.5':
+            for i in range (0,len(data)-1,2):
+                data [i] = str(int(data[i])-200)
+
     return SN, RESULT, data
 
 
@@ -93,14 +97,14 @@ def main():
     dataDir = sys.argv[1]
     resultExcel = sys.argv[2]
     dataFiles = []
-    
+
     for d in os.listdir(dataDir):
         dataFiles.append(dataDir + "/" + d)
     dataFiles.sort()
 
     for i in range(len(dataFiles)):
         parseFile(dataFiles[i])
-    
+
     printExt.printAll(resultExcel)
 
 

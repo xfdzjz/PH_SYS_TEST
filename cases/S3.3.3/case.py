@@ -22,7 +22,7 @@ def test(ctx):
 
     if resp != 'ready':
         return False
-    ctx.sourcemeter.applyVoltage(2)
+    ctx.sourcemeter.applyVoltage(3)
     amp = ctx.sourcemeter.ampTest() * 1000
     ctx.logger.info("Ibled amp is %f mA when VCC is 3.3v"%amp)
 
@@ -40,7 +40,7 @@ def test(ctx):
     if resp != 'ready':
         return False
     resp = ctx.tester.runCommand("next",2)
-    ctx.sourcemeter.applyVoltage(2)
+    ctx.sourcemeter.applyVoltage(3)
     amp = ctx.sourcemeter.ampTest() * 1000
     ctx.logger.info("Irbled amp is %f mA when VCC is 3.3v"%amp)
     resp = ctx.tester.runCommand("next",2)

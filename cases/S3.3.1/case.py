@@ -15,7 +15,7 @@ def test(ctx):
     # 芯片上电VCC=3V, Channel=1
 
     ctx.netmatrix.arrset(['10000000','00000000','00000000','00000000'])#GP12->SRC
-    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
+    ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.4, 1)
     ctx.sourcemeter.applyVoltage(0.2)
 
     ctx.tester.runCommand("test_mode_sel",0.2)
@@ -30,6 +30,8 @@ def test(ctx):
         ctx.powersupply.voltageOutput(3, 5, 0.1, 3.3, 1)
         amp = ctx.sourcemeter.ampTest() * 1000
         ctx.logger.info("thermdrv amp is %f mA when VCC is 5v"%amp)
+        input('n')
+
 
     resp = ctx.tester.runCommand("next",2)
     # ctx.logger.debug(resp)

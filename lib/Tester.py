@@ -20,7 +20,8 @@ class Tester:
         if cmd == 'test_mode_sel':
             self.SN = self.runCommand("cReadSN",2)
         elif cmd == 'EnterEstMode':
-            self.SN = self.runCommand("ReadSN",2)
+            #self.SN = self.runCommand("ReadSN",2)
+            pass
 
         self.port.close()
         self.port.open()

@@ -37,6 +37,7 @@ def test(ctx):
 
         for vol in [0.5, 1.5]:
             ctx.sourcemeter.applyVoltage(vol)
+            time.sleep(1)
             resp = ctx.tester.runCommand("next")
             ctx.logger.info("AIN=%d,vol=%f, RESP=%s" % (p["AIN"], vol, resp))
 

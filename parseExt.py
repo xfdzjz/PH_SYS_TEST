@@ -21,7 +21,8 @@ ptaParsers = {
     'S2.3': 'ISRCS amp is (\S+) uA when VCC is \S+v',
     'S2.4.1': 'INFO: result\d+mv:(\d+)',
     'S2.4.2': 'NOTHING',  # nothinf to parse
-    'S2.5': '(Right now|final result) is (\d+)mv',
+    # 'S2.5': '(Right now|final result) is (\d+)mv',
+    'S2.5': ' is (\d+)mv',
     'S2.6.1': 'indled amp is (\S+) when VCC is (\S+)v',
     'S2.7.1': 'ready:(\S+)mv VCC is (\S+)v avg is (\S+)',  # not tested yet
     'S2.7.2': 'ready:(\S+)mv VCC is (\S+)v avg is (\S+)',  # not tested yet
@@ -35,7 +36,7 @@ ptaParsers = {
     'S3.1.3': 'amp is (\S+) mA when VCC is \S+v',
     'S3.1.4': 'amp is (\S+) mA when VCC is \S+v',
     'S3.1.5': 'amp is (\S+) mA when VCC is \S+v',
-    'S3.2.1': 'VCC (\S+) V when POR (greater|less) than (\S+)',
+    'S3.5': 'VCC (\S+) V ',
     'S3.2.2': '= (\S+) ms',
     'S3.3.1': 'amp is (\S+) mA when VCC is (\S+)v',
     'S3.3.2': 'amp is (\S+) mA when sourmeter is (\S+)v',

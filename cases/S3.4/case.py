@@ -17,7 +17,7 @@ def test(ctx):
     ctx.netmatrix.arrset(['00000000','00000010','01000000','00100000'])#Horns,b->osc1,2
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)#vcc
     ctx.powersupply.voltageOutput(2, 10.5, 0.1, 11, 1)#vh
-    ctx.oscilloscope.trigMul(2,"POS",0.5,0.01,2)
+    ctx.oscilloscope.trigMul(2,"POS",0.5,0.01,5)
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("bzPwmMode",2)
@@ -25,13 +25,14 @@ def test(ctx):
     if resp == 'ready':
         time.sleep(2)
         para1=ctx.oscilloscope.paraTest(1)
-        time.sleep(1)
+        time.sleep(2)
         para2=ctx.oscilloscope.paraTest(2)
-        time.sleep(1)
+        time.sleep(2)
         if para1[0] == 0.25 and para1[1] == 0.5:
             ctx.logger.info("channel1 pass")
         else:
             ctx.logger.info("channel1 duty is %f, fre is %f" %(para1[0],para1[1]))
+
         if para2[0] == 0.25 and para2[1] == 0.5:
             ctx.logger.info("channel2 pass")
         else:

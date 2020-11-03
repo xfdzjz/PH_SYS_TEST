@@ -19,6 +19,7 @@ def test(ctx):
     ctx.netmatrix.arrset(['00000000','00001000','00000000','00000000'])#ps4->gp15 1.21v
 
     ctx.powersupply.voltageOutput(3, 3.3, 0.1, 3.3, 1)
+    #resp = 'pass'
     resp= ctx.tester.runCommand("EnterEstMode",1)
     ctx.logger.info('1.1 '+resp)
     if resp != 'pass':

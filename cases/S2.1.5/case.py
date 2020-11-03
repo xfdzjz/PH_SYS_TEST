@@ -18,7 +18,7 @@ def test(ctx):
     ctx.tester.runCommand("test_mode_sel",0.2)
     ctx.tester.runCommand("open_power_en",0.2)
     resp = ctx.tester.runCommand("MRCTestOnVCCVerify",3)
-    ctx.oscilloscope.timeset(0.000005)#示波器x轴一格多宽
+    ctx.oscilloscope.timeset(0.0000005)#示波器x轴一格多宽
 
     while resp !='end':
         ctx.logger.info(resp)
