@@ -26,17 +26,17 @@ def test(ctx):
             para = ctx.oscilloscope.paraTest(2)
             fre = para[1]
             duty = para[0]
-            ctx.logger.info("VCC is 3.3v fre is %f, duty is %f" %(fre,duty))
+            ctx.logger.info("VCC is 3.3v fre is %f M, duty is %f" %(fre/1000000,duty))
             ctx.powersupply.voltageOutput(3, 2.2, 0.1, 6, 1)
             para = ctx.oscilloscope.paraTest(2)
             fre = para[1]
             duty = para[0]
-            ctx.logger.info("VCC is 2.2v fre is %f, duty is %f" %(fre,duty))
+            ctx.logger.info("VCC is 2.2v fre is %f M, duty is %f" %(fre/1000000,duty))
             ctx.powersupply.voltageOutput(3, 5, 0.1, 5, 1)
             para = ctx.oscilloscope.paraTest(2)
             fre = para[1]
             duty = para[0]
-            ctx.logger.info("VCC is 5v fre is %f, duty is %f" %(fre,duty))
+            ctx.logger.info("VCC is 5v fre is %f M, duty is %f" %(fre/1000000,duty))
         else:
             return False
         resp = ctx.tester.runCommand("next",1)

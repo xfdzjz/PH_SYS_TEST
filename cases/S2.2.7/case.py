@@ -31,7 +31,7 @@ def test(ctx):
             ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)
             vol = ctx.sourcemeter.volTest()
             ctx.logger.info("VCC is 2.2v vol is %f" %vol)
-            ctx.powersupply.voltageOutput(3, 2.2, 0.1, 5, 1)
+            ctx.powersupply.voltageOutput(3, 3.3, 0.1, 5, 1)
             resp = ctx.tester.runCommand("next")
             counter = counter +1
         elif resp == 'ready' and counter ==5:

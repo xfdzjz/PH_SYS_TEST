@@ -36,7 +36,7 @@ def test(ctx):
                 ctx.oscilloscope.inst.write(":STOP")
                 time.sleep(1)
                 duty, fre = ctx.oscilloscope.paraTest(2)
-                ctx.logger.info("VCC is %1.1fv fre is %f, duty is %f" % (vcc, fre, duty))
+                ctx.logger.info("VCC is %1.1fv fre is %f, duty is %f" % (vcc, fre/1000000, duty))
             count = count + 1
         else:
             return False

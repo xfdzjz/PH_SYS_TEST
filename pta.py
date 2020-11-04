@@ -43,6 +43,7 @@ def parseCase(case, lines):
             for i in range (0,len(data)-1,2):
                 data [i] = str(int(data[i])-200)
 
+
     return SN, RESULT, data
 
 

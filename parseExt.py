@@ -16,8 +16,8 @@ ptaParsers = {
     'S2.2.7': 'VCC is \S+v vol is (\S+)',
     'S2.2.8': 'ready:(\S+)mv VCC is (\S+)v avg is (\S+)',
     'S2.2.9': 'ready:(\S+)mv VCC is (\S+)v avg is (\S+)',
-    'S2.2.10': 'vol is (\S+)',
-    'S2.2.11': 'vol is (\S+)',
+    'S2.2.10': 'Isrch amp is (\S+)',
+    'S2.2.11': 'Isrch amp is (\S+)',
     'S2.3': 'ISRCS amp is (\S+) uA when VCC is \S+v',
     'S2.4.1': 'INFO: result\d+mv:(\d+)',
     'S2.4.2': 'NOTHING',  # nothinf to parse
